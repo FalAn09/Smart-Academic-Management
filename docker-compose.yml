@@ -1,0 +1,184 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database for Auth Service
+  postgres-auth:
+    image: postgres:15-alpine
+    container_name: postgres-auth
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: auth_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-auth-data:/var/lib/postgresql/data
+    networks:
+      - smart-campus
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # PostgreSQL Database for Enrollment Service
+  postgres-enrollment:
+    image: postgres:15-alpine
+    container_name: postgres-enrollment
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: enrollment_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-enrollment-data:/var/lib/postgresql/data
+    networks:
+      - smart-campus
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # PostgreSQL Database for Subject Service
+  postgres-subject:
+    image: postgres:15-alpine
+    container_name: postgres-subject
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: subject_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-subject-data:/var/lib/postgresql/data
+    networks:
+      - smart-campus
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: redis-cache
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - smart-campus
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Auth Service
+  auth-service:
+    build:
+      context: ./backend/auth-service
+      dockerfile: Dockerfile
+    container_name: auth-service
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DB_HOST: postgres-auth
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_DATABASE: auth_db
+      JWT_SECRET: your_jwt_secret_key_change_in_production_$uP3rS3cr3tK3y
+      JWT_EXPIRATION: 7d
+      REFRESH_TOKEN_SECRET: your_refresh_token_secret_$uP3rR3fr3shS3cr3t
+      REFRESH_TOKEN_EXPIRATION: 30d
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres-auth:
+        condition: service_healthy
+    networks:
+      - smart-campus
+    volumes:
+      - ./backend/auth-service/src:/app/src
+      - ./backend/auth-service/node_modules:/app/node_modules
+
+  # Enrollment Service
+  enrollment-service:
+    build:
+      context: ./backend/enrollment-service
+      dockerfile: Dockerfile
+    container_name: enrollment-service
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DB_HOST: postgres-enrollment
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_DATABASE: enrollment_db
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 0
+      JWT_SECRET: your_jwt_secret_key_change_in_production_$uP3rS3cr3tK3y
+      JWT_EXPIRATION: 7d
+      AUTH_SERVICE_URL: http://auth-service:3000
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres-enrollment:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - smart-campus
+    volumes:
+      - ./backend/enrollment-service/src:/app/src
+      - ./backend/enrollment-service/node_modules:/app/node_modules
+
+  # Subject Service
+  subject-service:
+    build:
+      context: ./backend/subject-service
+      dockerfile: Dockerfile
+    container_name: subject-service
+    environment:
+      NODE_ENV: development
+      PORT: 3002
+      DB_HOST: postgres-subject
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_DATABASE: subject_db
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_DB: 1
+      JWT_SECRET: your_jwt_secret_key_change_in_production_$uP3rS3cr3tK3y
+      JWT_EXPIRATION: 7d
+      AUTH_SERVICE_URL: http://auth-service:3000
+    ports:
+      - "3002:3002"
+    depends_on:
+      postgres-subject:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - smart-campus
+    volumes:
+      - ./backend/subject-service/src:/app/src
+      - ./backend/subject-service/node_modules:/app/node_modules
+
+networks:
+  smart-campus:
+    driver: bridge
+
+volumes:
+  postgres-auth-data:
+  postgres-enrollment-data:
+  postgres-subject-data:
+  redis-data:
