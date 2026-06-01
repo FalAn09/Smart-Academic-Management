@@ -13,10 +13,12 @@ resource "aws_launch_template" "auth_lt" {
     systemctl enable docker
     curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
-    git clone -b Prueba2 https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
+    git clone -b qa https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
     cd /home/ec2-user/app
     echo "POSTGRES_USER=postgres" > .env
     echo "POSTGRES_PASSWORD=postgres" >> .env
+    echo "JWT_SECRET=your_jwt_secret_key_change_in_production_\$uP3rS3cr3tK3y" >> .env
+    echo "REFRESH_TOKEN_SECRET=your_refresh_token_secret_\$uP3rR3fr3shS3cr3t" >> .env
     echo "uP3rS3cr3tK3y=secret" >> .env
     echo "uP3rR3fr3shS3cr3t=secret" >> .env
     docker-compose up -d auth-service postgres-auth
@@ -38,11 +40,12 @@ resource "aws_launch_template" "enrollment_lt" {
     systemctl enable docker
     curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
-    git clone -b Prueba2 https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
+    git clone -b qa https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
     cd /home/ec2-user/app
     echo "POSTGRES_USER=postgres" > .env
     echo "POSTGRES_PASSWORD=postgres" >> .env
-    docker-compose up -d enrollment-service postgres-enrollment redis-cache
+    echo "JWT_SECRET=your_jwt_secret_key_change_in_production_\$uP3rS3cr3tK3y" >> .env
+    docker-compose up -d enrollment-service postgres-enrollment redis
   EOF
   )
 }
@@ -61,11 +64,12 @@ resource "aws_launch_template" "subject_lt" {
     systemctl enable docker
     curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
-    git clone -b Prueba2 https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
+    git clone -b qa https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
     cd /home/ec2-user/app
     echo "POSTGRES_USER=postgres" > .env
     echo "POSTGRES_PASSWORD=postgres" >> .env
-    docker-compose up -d subject-service postgres-subject
+    echo "JWT_SECRET=your_jwt_secret_key_change_in_production_\$uP3rS3cr3tK3y" >> .env
+    docker-compose up -d subject-service postgres-subject redis
   EOF
   )
 }
