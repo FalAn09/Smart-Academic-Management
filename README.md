@@ -1,45 +1,45 @@
 # Smart Academic Management - README
 
-## 📋 Descripción del Proyecto
+## Project Description
 
-Smart Academic Management es el **Módulo Académico (Módulo 1)** de la plataforma integrada **Smart Campus UCE**. Este proyecto implementa una arquitectura de microservicios desacoplados desarrollados en NestJS, empaquetados con Docker y desplegados en AWS mediante Terraform.
+Smart Academic Management is the **Academic Module (Module 1)** of the integrated **Smart Campus UCE** platform. This project implements a decoupled microservices architecture developed in NestJS, containerized with Docker, and deployed on AWS using Terraform.
 
-## 🏗️ Arquitectura
+## Architecture
 
-### Microservicios Core
+### Core Microservices
 
-1. **Auth Service** (Puerto 3000)
-   - Gestión de autenticación y autorización
-   - JWT basado en tokens
+1. **Auth Service** (Port 3000)
+   - Authentication and authorization management
+   - Token-based JWT
    - Roles: ADMIN, PROFESSOR, STUDENT, DEAN
 
-2. **Enrollment Service** (Puerto 3001)
-   - Gestión de matrículas/inscripciones
-   - Validación de cupos con ElastiCache (Redis)
-   - Operaciones atómicas para evitar condiciones de carrera
-   - Base de datos PostgreSQL dedicada
+2. **Enrollment Service** (Port 3001)
+   - Enrollment and registration management
+   - Quota validation with ElastiCache (Redis)
+   - Atomic operations to prevent race conditions
+   - Dedicated PostgreSQL database
 
-3. **Subject Service** (Puerto 3002)
-   - Administración del catálogo de asignaturas
-   - Gestión de oferta de materias
-   - Relación con programas académicos
-   - Base de datos PostgreSQL dedicada
+3. **Subject Service** (Port 3002)
+   - Subject catalog administration
+   - Subject offering management
+   - Relationship with academic programs
+   - Dedicated PostgreSQL database
 
-### Componentes de Infraestructura
+### Infrastructure Components
 
-- **Load Balancer (ALB)**: Distribuye el tráfico entre servicios
-- **RDS PostgreSQL**: 3 instancias independientes para cada servicio
-- **ElastiCache Redis**: Cache en memoria para validación de cupos
-- **ECS Fargate**: Orquestación de contenedores
-- **VPC**: Red aislada con subnets públicas y privadas
-- **CloudWatch**: Monitoreo y logs
+- **Load Balancer (ALB)**: Distributes traffic across services
+- **RDS PostgreSQL**: 3 independent instances for each service
+- **ElastiCache Redis**: In-memory cache for quota validation
+- **ECS Fargate**: Container orchestration
+- **VPC**: Isolated network with public and private subnets
+- **CloudWatch**: Monitoring and logging
 
-## 📁 Estructura del Proyecto
+## Project Structure
 
-```
+```text
 Smart Academic Management/
 ├── backend/
-│   ├── auth-service/          # Microservicio de autenticación
+│   ├── auth-service/          # Authentication Microservice
 │   │   ├── src/
 │   │   │   ├── auth/
 │   │   │   │   ├── auth.controller.ts
@@ -54,7 +54,7 @@ Smart Academic Management/
 │   │   ├── Dockerfile
 │   │   ├── package.json
 │   │   └── tsconfig.json
-│   ├── enrollment-service/    # Microservicio de matrículas
+│   ├── enrollment-service/    # Enrollment Microservice
 │   │   ├── src/
 │   │   │   ├── enrollment/
 │   │   │   │   ├── enrollment.controller.ts
@@ -67,7 +67,7 @@ Smart Academic Management/
 │   │   ├── Dockerfile
 │   │   ├── package.json
 │   │   └── tsconfig.json
-│   └── subject-service/       # Microservicio de asignaturas
+│   └── subject-service/       # Subject Microservice
 │       ├── src/
 │       │   ├── subject/
 │       │   │   ├── subject.controller.ts
@@ -81,42 +81,47 @@ Smart Academic Management/
 │       ├── package.json
 │       └── tsconfig.json
 ├── infrastructure/
-│   ├── docker/               # Configuraciones Docker adicionales
+│   ├── docker/                # Additional Docker configurations
 │   └── terraform/
 │       ├── modules/
-│       │   ├── vpc/         # Módulo VPC
-│       │   ├── rds/         # Módulo RDS
-│       │   ├── elasticache/ # Módulo ElastiCache
-│       │   ├── alb/         # Módulo Application Load Balancer
-│       │   └── ecs/         # Módulo ECS
-│       └── qa/              # Configuración QA
+│       │   ├── vpc/           # VPC Module
+│       │   ├── rds/           # RDS Module
+│       │   ├── elasticache/   # ElastiCache Module
+│       │   ├── alb/           # Application Load Balancer Module
+│       │   └── ecs/           # ECS Module
+│       └── qa/                # QA Configuration
 │           ├── main.tf
 │           ├── provider.tf
 │           ├── variables.tf
 │           ├── outputs.tf
 │           └── terraform.tfvars
-├── docker-compose.yml        # Compose para desarrollo local
+├── docker-compose.yml         # Compose for local development
 └── README.md
+
 ```
 
-## 🚀 Inicio Rápido
+## Quick Start
 
-### Desarrollo Local
+### Local Development
 
-#### Requisitos
-- Node.js 18+
-- Docker & Docker Compose
-- PostgreSQL (opcional si usas Docker)
-- Redis (opcional si usas Docker)
+#### Requirements
 
-#### Pasos
+* Node.js 18+
+* Docker & Docker Compose
+* PostgreSQL (optional if using Docker)
+* Redis (optional if using Docker)
 
-1. **Clonar el repositorio**
+#### Steps
+
+1. **Clone the repository**
+
 ```bash
 cd "Smart Academic Management"
+
 ```
 
-2. **Instalar dependencias**
+2. **Install dependencies**
+
 ```bash
 # Auth Service
 cd backend/auth-service
@@ -132,9 +137,11 @@ cd ../..
 cd backend/subject-service
 npm install
 cd ../..
+
 ```
 
-3. **Crear archivos .env**
+3. **Create .env files**
+
 ```bash
 cd backend/auth-service
 cp .env.example .env
@@ -145,48 +152,58 @@ cp .env.example .env
 cd ../subject-service
 cp .env.example .env
 cd ../../
+
 ```
 
-4. **Ejecutar con Docker Compose**
+4. **Run with Docker Compose**
+
 ```bash
 docker-compose up -d
+
 ```
 
-Esto iniciará:
-- 3 instancias PostgreSQL (puertos 5432, 5433, 5434)
-- 1 instancia Redis (puerto 6379)
-- Auth Service (puerto 3000)
-- Enrollment Service (puerto 3001)
-- Subject Service (puerto 3002)
+This will start:
 
-5. **Verificar servicios**
+* 3 PostgreSQL instances (ports 5432, 5433, 5434)
+* 1 Redis instance (port 6379)
+* Auth Service (port 3000)
+* Enrollment Service (port 3001)
+* Subject Service (port 3002)
+
+5. **Verify services**
+
 ```bash
-# Health check
+# Health checks
 curl http://localhost:3000/api/v1/auth/profile
 curl http://localhost:3001/api/v1/enrollments
 curl http://localhost:3002/api/v1/subjects
+
 ```
 
-### Despliegue en AWS (QA)
+### AWS Deployment (QA)
 
-#### Requisitos
-- AWS CLI configurado
-- Terraform >= 1.0
-- Credenciales de AWS con permisos suficientes
-- S3 bucket para Terraform state (crear manualmente)
-- DynamoDB table para locks (crear manualmente)
+#### Requirements
 
-#### Pasos
+* AWS CLI configured
+* Terraform >= 1.0
+* AWS Credentials with sufficient permissions
+* S3 bucket for Terraform state (create manually)
+* DynamoDB table for locks (create manually)
 
-1. **Crear S3 bucket para estado**
+#### Steps
+
+1. **Create S3 bucket for state**
+
 ```bash
 aws s3api create-bucket \
   --bucket smart-campus-terraform-state \
   --region us-east-1 \
   --profile your-profile
+
 ```
 
-2. **Crear DynamoDB table para locks**
+2. **Create DynamoDB table for locks**
+
 ```bash
 aws dynamodb create-table \
   --table-name terraform-locks \
@@ -195,195 +212,231 @@ aws dynamodb create-table \
   --provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \
   --region us-east-1 \
   --profile your-profile
+
 ```
 
-3. **Construir y enviar imágenes Docker a ECR**
+3. **Build and push Docker images to ECR**
+
 ```bash
-# Crear repositorios ECR
+# Create ECR repositories
 aws ecr create-repository --repository-name auth-service --region us-east-1
 aws ecr create-repository --repository-name enrollment-service --region us-east-1
 aws ecr create-repository --repository-name subject-service --region us-east-1
 
-# Login en ECR
+# Login to ECR
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 384078707866.dkr.ecr.us-east-1.amazonaws.com
 
-# Build y push de Auth Service
+# Build and push Auth Service
 cd backend/auth-service
-docker build -t 384078707866.dkr.ecr.us-east-1.amazonaws.com/auth-service:latest .
-docker push 384078707866.dkr.ecr.us-east-1.amazonaws.com/auth-service:latest
+docker build -t [384078707866.dkr.ecr.us-east-1.amazonaws.com/auth-service:latest](https://384078707866.dkr.ecr.us-east-1.amazonaws.com/auth-service:latest) .
+docker push [384078707866.dkr.ecr.us-east-1.amazonaws.com/auth-service:latest](https://384078707866.dkr.ecr.us-east-1.amazonaws.com/auth-service:latest)
 cd ../..
 
-# Build y push de Enrollment Service
+# Build and push Enrollment Service
 cd backend/enrollment-service
-docker build -t 384078707866.dkr.ecr.us-east-1.amazonaws.com/enrollment-service:latest .
-docker push 384078707866.dkr.ecr.us-east-1.amazonaws.com/enrollment-service:latest
+docker build -t [384078707866.dkr.ecr.us-east-1.amazonaws.com/enrollment-service:latest](https://384078707866.dkr.ecr.us-east-1.amazonaws.com/enrollment-service:latest) .
+docker push [384078707866.dkr.ecr.us-east-1.amazonaws.com/enrollment-service:latest](https://384078707866.dkr.ecr.us-east-1.amazonaws.com/enrollment-service:latest)
 cd ../..
 
-# Build y push de Subject Service
+# Build and push Subject Service
 cd backend/subject-service
-docker build -t 384078707866.dkr.ecr.us-east-1.amazonaws.com/subject-service:latest .
-docker push 384078707866.dkr.ecr.us-east-1.amazonaws.com/subject-service:latest
+docker build -t [384078707866.dkr.ecr.us-east-1.amazonaws.com/subject-service:latest](https://384078707866.dkr.ecr.us-east-1.amazonaws.com/subject-service:latest) .
+docker push [384078707866.dkr.ecr.us-east-1.amazonaws.com/subject-service:latest](https://384078707866.dkr.ecr.us-east-1.amazonaws.com/subject-service:latest)
 cd ../..
+
 ```
 
-4. **Inicializar Terraform**
+4. **Initialize Terraform**
+
 ```bash
 cd infrastructure/terraform/qa
 terraform init
+
 ```
 
-5. **Validar configuración**
+5. **Validate configuration**
+
 ```bash
 terraform validate
 terraform plan
+
 ```
 
-6. **Aplicar configuración**
+6. **Apply configuration**
+
 ```bash
 terraform apply
 
-# Se solicitarán confirmaciones. Escribe 'yes' para confirmar
+# You will be prompted for confirmation. Type 'yes' to confirm
+
 ```
 
-7. **Obtener outputs**
+7. **Get outputs**
+
 ```bash
 terraform output
 
-# Esto mostrará:
+# This will display:
 # - ALB DNS name
-# - URLs de servicios
-# - Endpoints de bases de datos
-# - Endpoints de caché
+# - Service URLs
+# - Database endpoints
+# - Cache endpoints
+
 ```
 
-## 📊 Endpoints de API
+## API Endpoints
 
 ### Auth Service
-```
-POST   /api/v1/auth/register        # Registrar nuevo usuario
-POST   /api/v1/auth/login           # Iniciar sesión
-GET    /api/v1/auth/profile         # Obtener perfil (requiere JWT)
-POST   /api/v1/auth/logout          # Cerrar sesión
-POST   /api/v1/auth/validate-token  # Validar token
-POST   /api/v1/auth/refresh-token   # Renovar token
+
+```text
+POST   /api/v1/auth/register        # Register new user
+POST   /api/v1/auth/login           # Login
+GET    /api/v1/auth/profile         # Get profile (requires JWT)
+POST   /api/v1/auth/logout          # Logout
+POST   /api/v1/auth/validate-token  # Validate token
+POST   /api/v1/auth/refresh-token   # Refresh token
+
 ```
 
 ### Enrollment Service
-```
-POST   /api/v1/enrollments                    # Crear matrícula
-GET    /api/v1/enrollments                    # Listar matrículas
-GET    /api/v1/enrollments/:id                # Obtener matrícula
-GET    /api/v1/enrollments/student/:studentId # Matrículas de estudiante
-PUT    /api/v1/enrollments/:id                # Actualizar matrícula
-DELETE /api/v1/enrollments/:id                # Eliminar matrícula
-POST   /api/v1/enrollments/validate-quota     # Validar cupos
+
+```text
+POST   /api/v1/enrollments                    # Create enrollment
+GET    /api/v1/enrollments                    # List enrollments
+GET    /api/v1/enrollments/:id                # Get enrollment details
+GET    /api/v1/enrollments/student/:studentId # Get student enrollments
+PUT    /api/v1/enrollments/:id                # Update enrollment
+DELETE /api/v1/enrollments/:id                # Delete enrollment
+POST   /api/v1/enrollments/validate-quota     # Validate quotas
+
 ```
 
 ### Subject Service
+
+```text
+POST   /api/v1/subjects                     # Create subject
+GET    /api/v1/subjects                     # List subjects
+GET    /api/v1/subjects/:id                 # Get subject details
+GET    /api/v1/subjects/code/:code          # Get subject by code
+GET    /api/v1/subjects/program/:programId  # Get subjects by program
+PUT    /api/v1/subjects/:id                 # Update subject
+DELETE /api/v1/subjects/:id                 # Delete subject
+
 ```
-POST   /api/v1/subjects                       # Crear asignatura
-GET    /api/v1/subjects                       # Listar asignaturas
-GET    /api/v1/subjects/:id                   # Obtener asignatura
-GET    /api/v1/subjects/code/:code            # Obtener por código
-GET    /api/v1/subjects/program/:programId    # Asignaturas de programa
-PUT    /api/v1/subjects/:id                   # Actualizar asignatura
-DELETE /api/v1/subjects/:id                   # Eliminar asignatura
-```
 
-## 🔐 Seguridad
+## Security
 
-### Medidas Implementadas
-- ✅ JWT para autenticación sin estado
-- ✅ Contraseñas encriptadas con bcryptjs
-- ✅ Operaciones atómicas con Redis para prevenir condiciones de carrera
-- ✅ Validación de datos con class-validator
-- ✅ CORS habilitado (configurable)
-- ✅ HTTPS en producción (ALB)
-- ✅ Secrets en AWS Secrets Manager
-- ✅ Encriptación en reposo (RDS, ElastiCache)
-- ✅ Security Groups para aislamiento de red
+### Implemented Measures
 
-### Recomendaciones de Producción
-- [ ] Cambiar contraseñas por defecto en terraform.tfvars
-- [ ] Habilitar HTTPS con AWS Certificate Manager
-- [ ] Implementar WAF (Web Application Firewall)
-- [ ] Habilitar Multi-AZ para RDS
-- [ ] Configurar Auto Scaling en ECS
-- [ ] Implementar backup automático diario
-- [ ] Habilitar CloudTrail para auditoría
-- [ ] Rotar credenciales regularmente
+* [x] JWT for stateless authentication
+* [x] Passwords encrypted with bcryptjs
+* [x] Atomic operations with Redis to prevent race conditions
+* [x] Data validation with class-validator
+* [x] CORS enabled (configurable)
+* [x] HTTPS in production (ALB)
+* [x] Secrets stored in AWS Secrets Manager
+* [x] Encryption at rest (RDS, ElastiCache)
+* [x] Security Groups for network isolation
 
-## 📈 Monitoreo y Logs
+### Production Recommendations
+
+* [ ] Change default passwords in terraform.tfvars
+* [ ] Enable HTTPS with AWS Certificate Manager
+* [ ] Implement WAF (Web Application Firewall)
+* [ ] Enable Multi-AZ for RDS
+* [ ] Configure Auto Scaling for ECS
+* [ ] Implement daily automatic backups
+* [ ] Enable CloudTrail for auditing
+* [ ] Rotate credentials regularly
+
+## Monitoring and Logs
 
 ### CloudWatch
-- Logs automáticos de ECS en: `/ecs/smart-academic-management-cluster`
-- Logs de ElastiCache: `/aws/elasticache/smart-academic-management-redis`
-- Métricas disponibles en AWS Console
 
-### Comandos útiles
+* Automated ECS logs at: `/ecs/smart-academic-management-cluster`
+* ElastiCache logs at: `/aws/elasticache/smart-academic-management-redis`
+* Metrics available in the AWS Console
+
+### Useful Commands
+
 ```bash
-# Ver logs de Auth Service
+# View Auth Service logs
 aws logs tail /ecs/smart-academic-management-cluster --follow --log-stream-names auth-service
 
-# Ver logs de Enrollment Service
+# View Enrollment Service logs
 aws logs tail /ecs/smart-academic-management-cluster --follow --log-stream-names enrollment-service
 
-# Ver logs de Subject Service
+# View Subject Service logs
 aws logs tail /ecs/smart-academic-management-cluster --follow --log-stream-names subject-service
+
 ```
 
-## 🔄 CI/CD (Futuro)
+## CI/CD (Future)
 
-El proyecto está preparado para integración con:
-- GitHub Actions
-- GitLab CI/CD
-- AWS CodePipeline
-- AWS CodeBuild
-- AWS CodeDeploy
+The project is ready for integration with:
 
-## 📝 Próximos Pasos
+* GitHub Actions
+* GitLab CI/CD
+* AWS CodePipeline
+* AWS CodeBuild
+* AWS CodeDeploy
 
-- [ ] Implementar gráficos académicos
-- [ ] Agregar reportes y analytics
-- [ ] Integración con sistemas de pago
-- [ ] Implementar notificaciones
-- [ ] API Gateway para enrutamiento
-- [ ] Service mesh (Istio/Linkerd)
-- [ ] Disaster recovery (RTO/RPO)
-- [ ] Load testing y optimización
+## Next Steps
 
-## 🛠️ Troubleshooting
+* [ ] Implement academic dashboards
+* [ ] Add reports and analytics
+* [ ] Integration with payment systems
+* [ ] Implement notifications
+* [ ] API Gateway for routing
+* [ ] Service mesh (Istio/Linkerd)
+* [ ] Disaster recovery (RTO/RPO)
+* [ ] Load testing and optimization
 
-### Problema: "Connection refused" para bases de datos
-**Solución**: Verificar que los security groups permiten conexiones:
+## Troubleshooting
+
+### Issue: "Connection refused" for databases
+
+**Solution**: Verify that the security groups allow connections:
+
 ```bash
 aws ec2 describe-security-groups --filters Name=tag:Name,Values=smart-academic-management-db-sg
+
 ```
 
-### Problema: Tasks no se inician en ECS
-**Solución**: Verificar logs en CloudWatch:
+### Issue: Tasks failing to start in ECS
+
+**Solution**: Check CloudWatch logs:
+
 ```bash
 aws logs describe-log-streams --log-group-name /ecs/smart-academic-management-cluster
+
 ```
 
-### Problema: Redis connection timeout
-**Solución**: Verificar endpoint de ElastiCache:
+### Issue: Redis connection timeout
+
+**Solution**: Verify the ElastiCache endpoint:
+
 ```bash
 aws elasticache describe-cache-clusters --cache-cluster-id smart-academic-management-redis --show-cache-node-info
+
 ```
 
-## 📞 Soporte
+## Support
 
-Para reportar issues o sugerencias, contactar al equipo de desarrollo de Smart Campus.
+To report issues or provide suggestions, please contact the Smart Campus development team.
 
-## 📄 Licencia
+## License
 
-Confidencial - Smart Campus UCE
+Confidential - Smart Campus UCE
 
 ---
 
-**Versión**: 1.0.0  
-**Última actualización**: 2024  
-**Estado**: Production Ready
-#   S m a r t - A c a d e m i c - M a n a g e m e n t  
- 
+**Version**: 1.0.0
+
+**Last Updated**: 2024
+
+**Status**: Production Ready
+
+```
+
+```
