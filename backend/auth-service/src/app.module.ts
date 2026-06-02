@@ -20,7 +20,7 @@ import { UserEntity } from './auth/entities/user.entity';
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_DATABASE || 'auth_db',
       entities: [UserEntity],
-      synchronize: process.env.NODE_ENV !== 'production',
+      synchronize: true, 
       logging: process.env.NODE_ENV !== 'production',
     }),
     PassportModule.register({ defaultStrategy: 'jwt' }),
