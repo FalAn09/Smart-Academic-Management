@@ -24,7 +24,7 @@ curl -L "https://github.com/docker/compose/releases/latest/download/docker-compo
 chmod +x /usr/local/bin/docker-compose
 
 # Clonar repositorio
-git clone -b main https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
+git clone -b qa https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
 
 # Dar permisos al usuario
 chown -R ec2-user:ec2-user /home/ec2-user/app
@@ -67,7 +67,7 @@ curl -L "https://github.com/docker/compose/releases/latest/download/docker-compo
 
 chmod +x /usr/local/bin/docker-compose
 
-git clone -b main https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
+git clone -b qa https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
 
 chown -R ec2-user:ec2-user /home/ec2-user/app
 
@@ -108,7 +108,7 @@ curl -L "https://github.com/docker/compose/releases/latest/download/docker-compo
 
 chmod +x /usr/local/bin/docker-compose
 
-git clone -b main https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
+git clone -b qa https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
 
 chown -R ec2-user:ec2-user /home/ec2-user/app
 
