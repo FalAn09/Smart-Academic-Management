@@ -78,22 +78,23 @@ services:
       timeout: 5s
       retries: 5
 
-  # Auth Service
+  # =========================
+  # MICROSERVICES (DOCKER HUB)
+  # =========================
+
   auth-service:
-    build:
-      context: ./backend/auth-service
-      dockerfile: Dockerfile
+    image: dapaeza/auth-service:latest
     container_name: auth-service
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       PORT: 3000
       DB_HOST: postgres-auth
       DB_PORT: 5432
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
       DB_DATABASE: auth_db
-      JWT_SECRET: your_jwt_secret_key_change_in_production_$$uP3rS3cr3tK3y
-      REFRESH_TOKEN_SECRET: your_refresh_token_secret_$$uP3rR3fr3shS3cr3t
+      JWT_SECRET: your_jwt_secret_key_change_in_production_$uP3rS3cr3tK3y
+      REFRESH_TOKEN_SECRET: your_refresh_token_secret_$uP3rR3fr3shS3cr3t
       REFRESH_TOKEN_EXPIRATION: 30d
     ports:
       - "3000:3000"
@@ -102,18 +103,12 @@ services:
         condition: service_healthy
     networks:
       - smart-campus
-    volumes:
-      - ./backend/auth-service/src:/app/src
-      - /app/node_modules
 
-  # Enrollment Service
   enrollment-service:
-    build:
-      context: ./backend/enrollment-service
-      dockerfile: Dockerfile
+    image: dapaeza/enrollment-service:latest
     container_name: enrollment-service
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       PORT: 3001
       DB_HOST: postgres-enrollment
       DB_PORT: 5432
@@ -123,7 +118,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
-      JWT_SECRET: your_jwt_secret_key_change_in_production_$$uP3rS3cr3tK3y
+      JWT_SECRET: your_jwt_secret_key_change_in_production_$uP3rS3cr3tK3y
       AUTH_SERVICE_URL: http://auth-service:3000
     ports:
       - "3001:3001"
@@ -134,18 +129,12 @@ services:
         condition: service_healthy
     networks:
       - smart-campus
-    volumes:
-      - ./backend/enrollment-service/src:/app/src
-      - /app/node_modules
 
-  # Subject Service
   subject-service:
-    build:
-      context: ./backend/subject-service
-      dockerfile: Dockerfile
+    image: dapaeza/subject-service:latest
     container_name: subject-service
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
       PORT: 3002
       DB_HOST: postgres-subject
       DB_PORT: 5432
@@ -155,7 +144,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 1
-      JWT_SECRET: your_jwt_secret_key_change_in_production_$$uP3rS3cr3tK3y
+      JWT_SECRET: your_jwt_secret_key_change_in_production_$uP3rS3cr3tK3y
       AUTH_SERVICE_URL: http://auth-service:3000
     ports:
       - "3002:3002"
@@ -166,9 +155,6 @@ services:
         condition: service_healthy
     networks:
       - smart-campus
-    volumes:
-      - ./backend/subject-service/src:/app/src
-      - /app/node_modules
 
 networks:
   smart-campus:
