@@ -1,76 +1,129 @@
 # --- LAUNCH TEMPLATES ---
 resource "aws_launch_template" "auth_lt" {
-  name_prefix   = "auth-lt-"
-  image_id      = data.aws_ami.amazon_linux.id
-  instance_type = "t2.micro"
+  name_prefix            = "auth-lt-"
+  image_id               = data.aws_ami.amazon_linux.id
+  instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.instances_sg.id]
 
   user_data = base64encode(<<-EOF
-    #!/bin/bash
-    dnf update -y
-    dnf install -y docker git
-    systemctl start docker
-    systemctl enable docker
-    curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    chmod +x /usr/local/bin/docker-compose
-    git clone -b qa https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
-    cd /home/ec2-user/app
-    echo "POSTGRES_USER=postgres" > .env
-    echo "POSTGRES_PASSWORD=postgres" >> .env
-    echo "JWT_SECRET=your_jwt_secret_key_change_in_production_\$uP3rS3cr3tK3y" >> .env
-    echo "REFRESH_TOKEN_SECRET=your_refresh_token_secret_\$uP3rR3fr3shS3cr3t" >> .env
-    echo "uP3rS3cr3tK3y=secret" >> .env
-    echo "uP3rR3fr3shS3cr3t=secret" >> .env
-    docker-compose up -d auth-service postgres-auth
-  EOF
+#!/bin/bash
+
+dnf update -y
+dnf install -y docker git
+
+systemctl enable docker
+systemctl start docker
+
+# Permitir a ec2-user usar Docker sin sudo
+usermod -aG docker ec2-user
+
+# Instalar Docker Compose
+curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" \
+-o /usr/local/bin/docker-compose
+
+chmod +x /usr/local/bin/docker-compose
+
+# Clonar repositorio
+git clone -b qa https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
+
+# Dar permisos al usuario
+chown -R ec2-user:ec2-user /home/ec2-user/app
+
+cd /home/ec2-user/app
+
+cat > .env << EOL
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+JWT_SECRET=secret
+REFRESH_TOKEN_SECRET=secret
+uP3rS3cr3tK3y=secret
+uP3rR3fr3shS3cr3t=secret
+EOL
+
+docker-compose up -d auth-service postgres-auth
+EOF
   )
 }
 
 resource "aws_launch_template" "enrollment_lt" {
-  name_prefix   = "enrollment-lt-"
-  image_id      = data.aws_ami.amazon_linux.id
-  instance_type = "t2.micro"
+  name_prefix            = "enrollment-lt-"
+  image_id               = data.aws_ami.amazon_linux.id
+  instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.instances_sg.id]
 
   user_data = base64encode(<<-EOF
-    #!/bin/bash
-    dnf update -y
-    dnf install -y docker git
-    systemctl start docker
-    systemctl enable docker
-    curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    chmod +x /usr/local/bin/docker-compose
-    git clone -b qa https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
-    cd /home/ec2-user/app
-    echo "POSTGRES_USER=postgres" > .env
-    echo "POSTGRES_PASSWORD=postgres" >> .env
-    echo "JWT_SECRET=your_jwt_secret_key_change_in_production_\$uP3rS3cr3tK3y" >> .env
-    docker-compose up -d enrollment-service postgres-enrollment redis
-  EOF
+#!/bin/bash
+
+dnf update -y
+dnf install -y docker git
+
+systemctl enable docker
+systemctl start docker
+
+usermod -aG docker ec2-user
+
+curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" \
+-o /usr/local/bin/docker-compose
+
+chmod +x /usr/local/bin/docker-compose
+
+git clone -b qa https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
+
+chown -R ec2-user:ec2-user /home/ec2-user/app
+
+cd /home/ec2-user/app
+
+cat > .env << EOL
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+JWT_SECRET=secret
+uP3rS3cr3tK3y=secret
+uP3rR3fr3shS3cr3t=secret
+EOL
+
+docker-compose up -d enrollment-service postgres-enrollment redis
+EOF
   )
 }
 
 resource "aws_launch_template" "subject_lt" {
-  name_prefix   = "subject-lt-"
-  image_id      = data.aws_ami.amazon_linux.id
-  instance_type = "t2.micro"
+  name_prefix            = "subject-lt-"
+  image_id               = data.aws_ami.amazon_linux.id
+  instance_type          = "t2.micro"
   vpc_security_group_ids = [aws_security_group.instances_sg.id]
 
   user_data = base64encode(<<-EOF
-    #!/bin/bash
-    dnf update -y
-    dnf install -y docker git
-    systemctl start docker
-    systemctl enable docker
-    curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    chmod +x /usr/local/bin/docker-compose
-    git clone -b qa https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
-    cd /home/ec2-user/app
-    echo "POSTGRES_USER=postgres" > .env
-    echo "POSTGRES_PASSWORD=postgres" >> .env
-    echo "JWT_SECRET=your_jwt_secret_key_change_in_production_\$uP3rS3cr3tK3y" >> .env
-    docker-compose up -d subject-service postgres-subject redis
-  EOF
+#!/bin/bash
+
+dnf update -y
+dnf install -y docker git
+
+systemctl enable docker
+systemctl start docker
+
+usermod -aG docker ec2-user
+
+curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" \
+-o /usr/local/bin/docker-compose
+
+chmod +x /usr/local/bin/docker-compose
+
+git clone -b qa https://github.com/FalAn09/Smart-Academic-Management.git /home/ec2-user/app
+
+chown -R ec2-user:ec2-user /home/ec2-user/app
+
+cd /home/ec2-user/app
+
+cat > .env << EOL
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+JWT_SECRET=secret
+uP3rS3cr3tK3y=secret
+uP3rR3fr3shS3cr3t=secret
+EOL
+
+docker-compose up -d subject-service postgres-subject redis
+EOF
   )
 }
 
