@@ -4,21 +4,25 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm ci --only=production && npm cache clean --force
+RUN npm install
 
 COPY . .
 
 RUN npm run build
 
+# Imagen final
 FROM node:18-alpine
 
 WORKDIR /app
 
 RUN apk add --no-cache dumb-init
 
-COPY --from=builder /app/node_modules ./node_modules
+COPY package*.json ./
+
+# Solo dependencias de producción
+RUN npm install --omit=dev
+
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/package*.json ./
 
 ENV NODE_ENV=production
 

@@ -80,7 +80,9 @@ services:
 
   # Auth Service
   auth-service:
-    image: chamorrito/auth-service:latest
+    build:
+      context: ./backend/auth-service
+      dockerfile: Dockerfile
     container_name: auth-service
     environment:
       NODE_ENV: development
@@ -90,9 +92,8 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
       DB_DATABASE: auth_db
-      JWT_SECRET: your_jwt_secret_key_change_in_production_$uP3rS3cr3tK3y
-      JWT_EXPIRATION: 7d
-      REFRESH_TOKEN_SECRET: your_refresh_token_secret_$uP3rR3fr3shS3cr3t
+      JWT_SECRET: your_jwt_secret_key_change_in_production_$$uP3rS3cr3tK3y
+      REFRESH_TOKEN_SECRET: your_refresh_token_secret_$$uP3rR3fr3shS3cr3t
       REFRESH_TOKEN_EXPIRATION: 30d
     ports:
       - "3000:3000"
@@ -103,11 +104,13 @@ services:
       - smart-campus
     volumes:
       - ./backend/auth-service/src:/app/src
-      - ./backend/auth-service/node_modules:/app/node_modules
+      - /app/node_modules
 
   # Enrollment Service
   enrollment-service:
-    image: chamorrito/enrollment-service:latest
+    build:
+      context: ./backend/enrollment-service
+      dockerfile: Dockerfile
     container_name: enrollment-service
     environment:
       NODE_ENV: development
@@ -120,8 +123,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
-      JWT_SECRET: your_jwt_secret_key_change_in_production_$uP3rS3cr3tK3y
-      JWT_EXPIRATION: 7d
+      JWT_SECRET: your_jwt_secret_key_change_in_production_$$uP3rS3cr3tK3y
       AUTH_SERVICE_URL: http://auth-service:3000
     ports:
       - "3001:3001"
@@ -134,7 +136,7 @@ services:
       - smart-campus
     volumes:
       - ./backend/enrollment-service/src:/app/src
-      - ./backend/enrollment-service/node_modules:/app/node_modules
+      - /app/node_modules
 
   # Subject Service
   subject-service:
@@ -153,8 +155,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 1
-      JWT_SECRET: your_jwt_secret_key_change_in_production_$uP3rS3cr3tK3y
-      JWT_EXPIRATION: 7d
+      JWT_SECRET: your_jwt_secret_key_change_in_production_$$uP3rS3cr3tK3y
       AUTH_SERVICE_URL: http://auth-service:3000
     ports:
       - "3002:3002"
@@ -167,7 +168,7 @@ services:
       - smart-campus
     volumes:
       - ./backend/subject-service/src:/app/src
-      - ./backend/subject-service/node_modules:/app/node_modules
+      - /app/node_modules
 
 networks:
   smart-campus:
