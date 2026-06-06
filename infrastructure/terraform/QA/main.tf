@@ -1,12 +1,12 @@
 provider "aws" {
-  region = "us-east-1"
+  region     = "us-east-1"
 }
 
 # Usar la VPC y subredes por defecto de AWS Academy
 data "aws_vpc" "default" {
   default = true
 }
-
+##
 data "aws_subnets" "default" {
   filter {
     name   = "vpc-id"
