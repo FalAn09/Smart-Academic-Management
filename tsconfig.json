@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/auth-service-e2e"
+    },
+    {
+      "path": "./packages/auth-service"
+    },
+    {
+      "path": "./packages/enrollment-service-e2e"
+    },
+    {
+      "path": "./packages/enrollment-service"
+    },
+    {
+      "path": "./packages/subject-service-e2e"
+    },
+    {
+      "path": "./packages/subject-service"
+    }
+  ]
+}

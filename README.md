@@ -1,346 +1,107 @@
-# Smart Academic Management - README
+# New Nx Repository
 
-## 📋 Project Description
+<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
-Smart Academic Management is the **Academic Module (Module 1)** of the integrated **Smart Campus UCE** platform. This project implements a decoupled microservices architecture developed in NestJS, packaged with Docker, and deployed on AWS using Terraform.
+✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
 
+[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+## Finish your Nx platform setup
 
-## 🏗️ Architecture
+🚀 [Finish setting up your workspace](https://cloud.nx.app/connect/pR1ZQsOs0M) to get faster builds with remote caching, distributed task execution, and self-healing CI. [Learn more about Nx Cloud](https://nx.dev/ci/intro/why-nx-cloud).
 
-### Core Microservices
+## Generate a library
 
-1. **Auth Service** (Port 3000)
-
-- Authentication and authorization management
-
-- Token-based JWT
-
-- Roles: ADMIN, PROFESSOR, STUDENT, DEAN
-
-2. **Enrollment Service** (Port 3001)
-
-- Enrollment/registration management
-
-- Capacity validation with ElastiCache (Redis)
-
-- Atomic operations to prevent race conditions
-
-- Dedicated PostgreSQL database
-
-3. **Subject Service** (Port 3002)
-
-- Course catalog management
-
-- Course offering management
-
-- Relationship with academic programs
-
-- Dedicated PostgreSQL database
-
-### Infrastructure Components
-
-- **Load Balancer (ALB)**: Distributes traffic among services
-- **PostgreSQL RDS**: 3 independent instances for each service
-- **ElastiCache Redis**: In-memory cache for course validation
-- **ECS Fargate**: Container orchestration
-- **VPC**: Isolated network with public and private subnets
-- **CloudWatch**: Monitoring and logging
-
-## 📁 Project Structure
-
-```
-Smart Academic Management/
-├── backend/
-│ ├── auth-service/ # Authentication microservice
-│ │ ├── src/
-│ │ │ ├── auth/
-│ │ │ │ ├── auth.controller.ts
-│ │ │ │ ├── auth.service.ts
-│ │ │ │ ├── auth.module.ts
-│ │ │ │ ├── entities/
-│ │ │ │ ├── discount/
-│ │ │ │ ├── strategies/
-│ │ │ │ └── guards/
-│ │ │ ├── app.module.ts
-│ │ │ └── main.ts
-│ │ ├── Dockerfile
-│ │ ├── package.json
-│ │ └── tsconfig.json
-│ ├── enrollment-service/ # Enrollment microservice
-│ │ ├── src/
-│ │ │ ├── enrollment/
-│ │ │ │ ├── enrollment.controller.ts
-│ │ │ │ ├── enrollment.service.ts
-│ │ │ │ ├── enrollment.module.ts
-│ │ │ │ ├── entities/
-│ │ │ │ └── discount/
-│ │ │ ├── app.module.ts
-│ │ │ └── main.ts
-│ │ ├── Dockerfile
-│ │ ├── package.json
-│ │ └── tsconfig.json
-│ └── subject-service/ # Subject microservice
-│ ├── src/
-│ │ ├── subject/
-│ │ │ ├── subject.controller.ts
-│ │ │ ├── subject.service.ts
-│ │ │ ├── subject.module.ts
-│ │ │ ├── entities/
-│ │ │ └── discount/
-│ │ ├── app.module.ts
-│ │ └── main.ts
-│ ├── Dockerfile
-│ ├── package.json
-│ └── tsconfig.json
-├── infrastructure/
-│ ├── docker/ # Additional Docker configurations
-│ └── terraform/
-│ ├── modules/
-│ │ ├── vpc/ # VPC Module
-│ │ ├── rds/ # RDS Module
-│ │ ├── elasticache/ # ElastiCache Module
-│ │ ├── alb/ # Application Load Balancer Module
-│ │ └── ecs/ # ECS Module
-│ └── qa/ # QA Configuration
-│ ├── main.tf
-│ ├── provider.tf
-│ ├── variables.tf
-│ ├── outputs.tf
-│ └── terraform.tfvars
-├── docker-compose.yml # Compose for local development
-└── README.md
+```sh
+npx nx g @nx/js:lib packages/pkg1 --publishable --importPath=@my-org/pkg1
 ```
 
-## 🚀 Quick Start
+## Run tasks
 
-### Local Development
+To build the library use:
 
-#### Requirements
-- Node.js 18+
-- Docker & Docker Compose
-- PostgreSQL (optional if using Docker)
-- Redis (optional if using Docker)
-
-#### Steps
-
-1. **Clone the repository**
-```bash
-cd "Smart Academic Management"
+```sh
+npx nx build pkg1
 ```
 
-2. **Install dependencies**
-```bash
-# Auth Service
-cd backend/auth-service
-npm install
-cd ../..
+To run any task with Nx use:
 
-# Enrollment Service
-cd backend/enrollment-service
-npm install
-cd ../..
-
-# Subject Service
-cd backend/subject-service
-npm install
-cd ../..
+```sh
+npx nx <target> <project-name>
 ```
 
-3. **Create .env files**
-```bash
-cd backend/auth-service
-cp .env.example .env
+These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
 
-cd ../enrollment-service
-cp .env.example .env
+[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
-cd ../subject-service
-cp .env.example .env
-cd ../../
+## Versioning and releasing
+
+To version and release the library use
+
+```
+npx nx release
 ```
 
-4. **Run with Docker Compose**
-```bash
-docker-compose up -d
+Pass `--dry-run` to see what would happen without actually releasing the library.
+
+[Learn more about Nx release &raquo;](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+
+## Keep TypeScript project references up to date
+
+Nx automatically updates TypeScript [project references](https://www.typescriptlang.org/docs/handbook/project-references.html) in `tsconfig.json` files to ensure they remain accurate based on your project dependencies (`import` or `require` statements). This sync is automatically done when running tasks such as `build` or `typecheck`, which require updated references to function correctly.
+
+To manually trigger the process to sync the project graph dependencies information to the TypeScript project references, run the following command:
+
+```sh
+npx nx sync
 ```
 
-This will start:
-- 3 PostgreSQL instances (ports 5432, 5433, 5434)
-- 1 Redis instance (port 6379)
-- Auth Service (port 3000)
-- Enrollment Service (port 3001)
-- Subject Service (port 3002)
+You can enforce that the TypeScript project references are always in the correct state when running in CI by adding a step to your CI job configuration that runs the following command:
 
-5. **Verify Services**
-```bash
-# Health check
-curl http://localhost:3000/api/v1/auth/profile
-curl http://localhost:3001/api/v1/enrollments
-curl http://localhost:3002/api/v1/subjects
+```sh
+npx nx sync:check
 ```
 
-### Deployment on AWS (QA)
+[Learn more about nx sync](https://nx.dev/reference/nx-commands#sync)
 
-#### Requirements
-- AWS CLI configured
-- Terraform >= 1.0
-- AWS credentials with sufficient permissions
-- S3 bucket for Terraform state (create manually)
-- DynamoDB table for locks (create manually)
+## Nx Cloud
 
-#### Steps
+Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
 
-1. **Create S3 bucket for state**
-```bash
-aws s3api create-bucket \
---bucket smart-campus-terraform-state \
---region us-east-1 \
---profile your-profile
+- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+
+### Set up CI (non-Github Actions CI)
+
+**Note:** This is only required if your CI provider is not GitHub Actions.
+
+Use the following command to configure a CI workflow for your workspace:
+
+```sh
+npx nx g ci-workflow
 ```
 
-2. **Create DynamoDB table for locks**
-```bash
-aws dynamodb create-table \ 
---table-name terraform-locks
-\ 
---attribute-definitions AttributeName=LockID,AttributeType=S \ 
---key-schema AttributeName=LockID,KeyType=HASH \ 
---provisioned-throughput ReadCapacityUnits=5,WriteCapacityUnits=5 \ 
---region us-east-1 \ 
---profile your-profile
-```
+[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
-3. **Build and push Docker images to ECR**
-```bash
-# Create ECR repositories
-aws ecr create-repository --repository-name auth-service --region us-east-1
-aws ecr create-repository --repository-name enrollment-service --region us-east-1
-aws ecr create-repository --repository-name subject-service --region us-east-1
+## Install Nx Console
 
-# Login in ECR
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 384078707866.dkr.ecr.us-east-1.amazonaws.com
+Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
 
-# Build and push Auth Service
-cd backend/auth-service
-docker build -t 384078707866.dkr.ecr.us-east-1.amazonaws.com/auth-service:latest .
-docker push 384078707866.dkr.ecr.us-east-1.amazonaws.com/auth-service:latest
-cd ../..
+[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
-# Build and push Enrollment Service
-cd backend/enrollment-service
-docker build -t 384078707866.dkr.ecr.us-east-1.amazonaws.com/enrollment-service:latest .
-docker push 384078707866.dkr.ecr.us-east-1.amazonaws.com/enrollment-service:latest
-cd ../..
+## Useful links
 
-# Build and push Subject Service
-cd backend/subject-service
-docker build -t 384078707866.dkr.ecr.us-east-1.amazonaws.com/subject-service:latest .
-docker push 384078707866.dkr.ecr.us-east-1.amazonaws.com/subject-service:latest
-cd ../..
-```
+Learn more:
 
-4. **Initialize Terraform**
-```bash
-cd infrastructure/terraform/qa
-terraform init
-```
+- [Learn more about this workspace setup](https://nx.dev/nx-api/js?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
-5. **Validate configuration**
-```bash
-terraform validate
-terraform plan
-```
+And join the Nx community:
 
-6. **Apply configuration**
-```bash
-terraform apply
-
-# Confirmations will be requested. Type 'yes' to confirm
-```
-
-7. **Get Outputs**
-```bash
-terraform output
-
-# This will show:
-# - ALB DNS name
-# - Service URLs
-# - Database endpoints
-# - Cache endpoints
-```
-
-## 📊 API Endpoints
-
-### Auth Service
-```
-POST /api/v1/auth/register # Register new user
-POST /api/v1/auth/login # Log in
-GET /api/v1/auth/profile # Get profile (requires JWT)
-POST /api/v1/auth/logout # Log out
-POST /api/v1/auth/validate-token # Validate token
-POST /api/v1/auth/refresh-token # Refresh token
-```
-
-### Enrollment Service
-```
-POST /api/v1/enrollments # Create enrollment
-GET /api/v1/enrollments # List enrollments
-GET /api/v1/enrollments/:id # Get enrollment
-GET /api/v1/enrollments/student/:studentId # Student enrollments
-PUT /api/v1/enrollments/:id # Update enrollment
-DELETE /api/v1/enrollments/:id # Delete enrollment
-POST /api/v1/enrollments/validate-quota # Validate quotas
-```
-
-### Subject Service
-```
-POST /api/v1/subjects # Create subject
-GET /api/v1/subjects # List subjects
-GET /api/v1/subjects/:id # Get subject
-GET /api/v1/subjects/code/:code # Get by code
-GET /api/v1/subjects/program/:programId # Program subjects
-PUT /api/v1/subjects/:id # Update subject
-DELETE /api/v1/subjects/:id # Delete subject
-```
-
-## 🔐 Security
-
-### Implemented Measures
-- ✅ JWT for stateless authentication
-- ✅ Passwords encrypted with bcryptjs
-- ✅ Atomic operations with Redis to prevent race conditions
-- ✅ Data validation with class-validator
-- ✅ CORS enabled (configurable)
-- ✅ HTTPS in production (ALB)
-- ✅ Secrets in AWS Secrets Manager
-- ✅ Encryption at rest (RDS, ElastiCache)
-- ✅ Security Groups for network isolation
-
-### Production Recommendations
-- [ ] Change passwords Default settings in terraform.tfvars
-- [ ] Enable HTTPS with AWS Certificate Manager
-- [ ] Implement a WAF (Web Application Firewall)
-- [ ] Enable Multi-AZ for RDS
-- [ ] Configure Auto Scaling in ECS
-- [ ] Implement daily automatic backups
-- [ ] Enable CloudTrail for auditing
-- [ ] Rotate credentials regularly
-
-## 📈 Monitoring and Logs
-
-### CloudWatch
-- Automatic ECS logs in: `/ecs/smart-academic-management-cluster`
-- ElastiCache logs: `/aws/elasticache/smart-academic-management-redis`
-- Metrics available in the AWS Console
-
-### Useful Commands
-```bash
-# View Auth Service logs
-`aws logs tail /ecs/smart-academic-management-cluster --follow` --log-stream-names auth-service
-
-# View Enrollment Service logs
-aws logs tail /ecs/smart-academic-management-cluster --follow --log-stream-names enrollment-service
-
-# View Subject Service logs
-aws logs tail /ecs/smart-academic-management-cluster --follow --log-stream-names subject-service
-```
+- [Discord](https://go.nx.dev/community)
+- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
+- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
+- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
