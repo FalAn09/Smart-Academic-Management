@@ -1,7 +1,7 @@
 terraform {
   backend "s3" {
-    bucket         = "tu-nombre-de-bucket-unico-aqui" # El nombre del bucket que creaste en el Paso 1
-    key            = "prod/terraform.tfstate"         # La ruta dentro del bucket donde se guardará el archivo
+    bucket         = "smart-campus-uce-tfstate-dapaeza"  # El nombre del bucket que creaste en el Paso 1
+    key            = "qa/terraform.tfstate"         # La ruta dentro del bucket donde se guardará el archivo
     region         = "us-east-1"                      # La región de tu Learner Lab
     encrypt        = true                             # Encriptar el estado en reposo
   }
