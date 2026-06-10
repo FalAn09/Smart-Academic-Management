@@ -1,8 +1,16 @@
+terraform {
+  backend "s3" {
+    bucket         = "smart-campus-uce-tfstate-dapaeza"  # El nombre del bucket que creaste en el Paso 1
+    key            = "qa/terraform.tfstate"         # La ruta dentro del bucket donde se guardará el archivo
+    region         = "us-east-1"                      # La región de tu Learner Lab
+    encrypt        = true                             # Encriptar el estado en reposo
+  }
+}
+
 provider "aws" {
   region     = "us-east-1"
 }
 
-# Usar la VPC y subredes por defecto de AWS Academy
 data "aws_vpc" "default" {
   default = true
 }
@@ -14,7 +22,6 @@ data "aws_subnets" "default" {
   }
 }
 
-# Obtener la AMI de Amazon Linux 2023
 data "aws_ami" "amazon_linux" {
   most_recent = true
   owners      = ["amazon"]
@@ -24,7 +31,6 @@ data "aws_ami" "amazon_linux" {
   }
 }
 
-# Security Group para el Load Balancer (Abierto a Internet)
 resource "aws_security_group" "alb_sg" {
   name        = "smart_campus_alb_sg"
   description = "Permitir trafico HTTP al ALB"
@@ -45,12 +51,12 @@ resource "aws_security_group" "alb_sg" {
   }
 }
 
-# Security Group para las Instancias EC2 (Solo aceptan tráfico del ALB)
 resource "aws_security_group" "instances_sg" {
   name        = "smart_campus_instances_sg"
-  description = "Permitir trafico interno desde el ALB"
+  description = "Permitir trafico interno desde el ALB y entre instancias"
   vpc_id      = data.aws_vpc.default.id
 
+  # Permitir trafico desde el ALB
   ingress {
     from_port       = 3000
     to_port         = 3002
@@ -58,16 +64,17 @@ resource "aws_security_group" "instances_sg" {
     security_groups = [aws_security_group.alb_sg.id]
   }
 
+  # NUEVO: Permitir que las instancias EC2 hablen entre ellas (Vital para Enrollment -> Auth/Subject)
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    self      = true 
   }
 
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = 22
+    to_port     = 22
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
