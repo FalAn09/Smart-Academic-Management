@@ -303,29 +303,6 @@ PUT /api/v1/subjects/:id # Update subject
 DELETE /api/v1/subjects/:id # Delete subject
 ```
 
-## 🔐 Security
-
-### Implemented Measures
-- ✅ JWT for stateless authentication
-- ✅ Passwords encrypted with bcryptjs
-- ✅ Atomic operations with Redis to prevent race conditions
-- ✅ Data validation with class-validator
-- ✅ CORS enabled (configurable)
-- ✅ HTTPS in production (ALB)
-- ✅ Secrets in AWS Secrets Manager
-- ✅ Encryption at rest (RDS, ElastiCache)
-- ✅ Security Groups for network isolation
-
-### Production Recommendations
-- [ ] Change passwords Default settings in terraform.tfvars
-- [ ] Enable HTTPS with AWS Certificate Manager
-- [ ] Implement a WAF (Web Application Firewall)
-- [ ] Enable Multi-AZ for RDS
-- [ ] Configure Auto Scaling in ECS
-- [ ] Implement daily automatic backups
-- [ ] Enable CloudTrail for auditing
-- [ ] Rotate credentials regularly
-
 ## 📈 Monitoring and Logs
 
 ### CloudWatch
@@ -339,8 +316,3 @@ DELETE /api/v1/subjects/:id # Delete subject
 `aws logs tail /ecs/smart-academic-management-cluster --follow` --log-stream-names auth-service
 
 # View Enrollment Service logs
-aws logs tail /ecs/smart-academic-management-cluster --follow --log-stream-names enrollment-service
-
-# View Subject Service logs
-aws logs tail /ecs/smart-academic-management-cluster --follow --log-stream-names subject-service
-```

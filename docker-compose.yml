@@ -120,6 +120,7 @@ services:
       REDIS_DB: 0
       JWT_SECRET: your_jwt_secret_key_change_in_production_$uP3rS3cr3tK3y
       AUTH_SERVICE_URL: http://auth-service:3000
+      SUBJECT_SERVICE_URL: http://subject-service:3002
     ports:
       - "3001:3001"
     depends_on:

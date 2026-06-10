@@ -1,0 +1,12 @@
+packages:
+  - 'packages/*'
+  - 'auth-service'
+  - 'auth-service-e2e'
+allowBuilds:
+  '@nestjs/core': true
+  '@parcel/watcher': true
+  '@scarf/scarf': true
+  '@swc/core': true
+  less: true
+  nx: true
+  unrs-resolver: true
