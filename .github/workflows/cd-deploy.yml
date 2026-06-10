@@ -1,0 +1,66 @@
+name: CD - Deploy on Aws
+
+on:
+  push:
+    branches: [ "qa" ] # Triggered when merging to the QA branch
+
+jobs:
+  build-and-deploy:
+    name: Build Images and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout of the code
+        uses: actions/checkout@v4
+
+      - name: Configure Node.js and pnpm
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 8
+      - run: pnpm install
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    # 1. Image compilation and upload (Here we use the complete Nx build)
+      - name: Build and upload Auth Service
+        run: |
+          npx nx run auth-service:build:production
+          docker build -f packages/auth-service/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/auth-service:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/auth-service:latest
+
+      - name: Build and upload Enrollment Service
+        run: |
+          npx nx run enrollment-service:build:production
+          docker build -f packages/enrollment-service/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/enrollment-service:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/enrollment-service:latest
+
+      - name: Build and upload Subject Service
+        run: |
+          npx nx run subject-service:build:production
+          docker build -f packages/subject-service/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/subject-service:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/subject-service:latest
+
+    # 2. SSH connection to the AWS instance to update
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/ec2-user/app
+            
+            # Bring in the latest docker-compose.yml
+            git pull origin qa
+            
+            # Download the new images we just compiled
+            docker-compose pull
+            
+            # Restart services without dropping the database
+            docker-compose up -d --force-recreate auth-service enrollment-service subject-service
