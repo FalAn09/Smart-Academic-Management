@@ -4,17 +4,24 @@ import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { UpdateEnrollmentDto } from './dto/update-enrollment.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
-@Controller('api/v1/enrollments')
+// 1. APLICAMOS EL NAMESPACE Y USAMOS PLURAL
+@Controller('api/v1/enrollments/data') 
 export class EnrollmentController {
   constructor(
     private readonly enrollmentService: EnrollmentService,
     @Inject(CACHE_MANAGER) private cacheManager: any,
   ) {}
 
+  // 2. ENDPOINT DE SALUD PARA EL TARGET GROUP DE AWS
+  @Get('health')
+  healthCheck() {
+    return { status: 'ok', timestamp: new Date().toISOString() };
+  }
+
   @Post()
   async createEnrollment(@Body() createEnrollmentDto: CreateEnrollmentDto) {
     const enrollment = await this.enrollmentService.create(createEnrollmentDto);
-    await this.cacheManager.del('enrollments'); // Invalidate cache
+    await this.cacheManager.del('enrollments'); 
     return {
       statusCode: 201,
       message: 'Enrollment created successfully',
