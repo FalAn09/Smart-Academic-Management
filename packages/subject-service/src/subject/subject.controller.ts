@@ -1,15 +1,32 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Inject } from '@nestjs/common';
+import { 
+  Controller, 
+  Get, 
+  Post, 
+  Body, 
+  Param, 
+  Put, 
+  Delete, 
+  Inject, 
+  ParseUUIDPipe 
+} from '@nestjs/common';
 import { SubjectService } from './subject.service';
 import { CreateSubjectDto } from './dto/create-subject.dto';
 import { UpdateSubjectDto } from './dto/update-subject.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
-@Controller('api/v1/subjects')
+// 1. NAMESPACE EXCLUSIVO EN PLURAL
+@Controller('api/v1/subjects/data')
 export class SubjectController {
   constructor(
     private readonly subjectService: SubjectService,
     @Inject(CACHE_MANAGER) private cacheManager: any,
   ) {}
+
+  // 2. ENDPOINT DE SALUD PARA EL TARGET GROUP DE AWS
+  @Get('health')
+  healthCheck() {
+    return { status: 'ok', timestamp: new Date().toISOString() };
+  }
 
   @Post()
   async createSubject(@Body() createSubjectDto: CreateSubjectDto) {
@@ -62,8 +79,8 @@ export class SubjectController {
     };
   }
 
-  @Get(':id')
-  async getSubjectById(@Param('id') id: string) {
+  @Get('detail/:id')
+  async getSubjectById(@Param('id', ParseUUIDPipe) id: string) {
     const subject = await this.subjectService.findById(id);
     return {
       statusCode: 200,
@@ -72,9 +89,9 @@ export class SubjectController {
     };
   }
 
-  @Put(':id')
+  @Put('detail/:id')
   async updateSubject(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() updateSubjectDto: UpdateSubjectDto,
   ) {
     const subject = await this.subjectService.update(id, updateSubjectDto);
@@ -86,8 +103,8 @@ export class SubjectController {
     };
   }
 
-  @Delete(':id')
-  async deleteSubject(@Param('id') id: string) {
+  @Delete('detail/:id')
+  async deleteSubject(@Param('id', ParseUUIDPipe) id: string) {
     await this.subjectService.delete(id);
     await this.cacheManager.del('subjects');
     return {
