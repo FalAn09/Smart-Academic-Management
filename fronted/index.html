@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Academic Management</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script defer src="/app.js"></script>
+  </head>
+  <body>
+    <div class="bg-shape bg-shape-1"></div>
+    <div class="bg-shape bg-shape-2"></div>
+
+    <main class="shell">
+      <header class="hero">
+        <p class="eyebrow">Frontend basico</p>
+        <h1>Smart Academic Management</h1>
+        <p class="subtitle">
+          Panel simple para probar los microservicios de autenticacion, inscripcion y materias.
+        </p>
+        <div class="status-row">
+          <span class="chip">auth-service</span>
+          <span class="chip">enrollment-service</span>
+          <span class="chip">subject-service</span>
+        </div>
+      </header>
+
+      <section class="grid">
+        <article class="card">
+          <div class="card-head">
+            <h2>Auth Service</h2>
+            <button class="ghost" data-action="clear-auth">Limpiar</button>
+          </div>
+          <p class="card-copy">Registro y acceso basico.</p>
+
+          <form id="register-form" class="stack">
+            <h3>Registro</h3>
+            <div class="form-grid">
+              <input name="username" placeholder="Username" required />
+              <input name="email" type="email" placeholder="Email" required />
+              <input name="firstName" placeholder="Nombre" required />
+              <input name="lastName" placeholder="Apellido" required />
+              <input name="password" type="password" placeholder="Password" required />
+              <select name="role" required>
+                <option value="STUDENT">STUDENT</option>
+                <option value="PROFESSOR">PROFESSOR</option>
+                <option value="DEAN">DEAN</option>
+                <option value="ADMIN">ADMIN</option>
+              </select>
+              <input name="studentId" placeholder="Student ID opcional" />
+              <input name="professorId" placeholder="Professor ID opcional" />
+            </div>
+            <button type="submit">Crear usuario</button>
+          </form>
+
+          <form id="login-form" class="stack">
+            <h3>Login</h3>
+            <div class="form-grid">
+              <input name="username" placeholder="Username" required />
+              <input name="password" type="password" placeholder="Password" required />
+            </div>
+            <button type="submit">Entrar</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h2>Subject Service</h2>
+            <button class="ghost" data-action="health-subject">Health</button>
+          </div>
+          <p class="card-copy">Crear y consultar materias.</p>
+
+          <form id="subject-form" class="stack">
+            <h3>Nueva materia</h3>
+            <div class="form-grid">
+              <input name="code" placeholder="Codigo" required />
+              <input name="name" placeholder="Nombre" required />
+              <input name="description" placeholder="Descripcion" />
+              <input name="credits" type="number" min="1" placeholder="Creditos" required />
+              <input name="hours" type="number" min="1" placeholder="Horas" required />
+              <input name="semester" placeholder="Semestre" required />
+              <input name="programId" placeholder="Program ID" required />
+              <input name="professor" placeholder="Profesor opcional" />
+              <input name="maxCapacity" type="number" min="1" placeholder="Capacidad max" required />
+              <input name="prerequisites" placeholder="Prerequisitos opcional" />
+            </div>
+            <button type="submit">Guardar materia</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h2>Enrollment Service</h2>
+            <button class="ghost" data-action="health-enrollment">Health</button>
+          </div>
+          <p class="card-copy">Crear y revisar matriculas.</p>
+
+          <form id="enrollment-form" class="stack">
+            <h3>Nueva matricula</h3>
+            <div class="form-grid">
+              <input name="studentId" placeholder="Student ID" required />
+              <input name="subjectId" placeholder="Subject ID" required />
+              <input name="semester" placeholder="Semestre" required />
+              <input name="credits" type="number" min="1" placeholder="Creditos" required />
+              <input name="professor" placeholder="Profesor opcional" />
+            </div>
+            <button type="submit">Guardar matricula</button>
+          </form>
+        </article>
+      </section>
+
+      <section class="response-panel">
+        <div class="response-head">
+          <h2>Respuesta</h2>
+          <button class="ghost" id="copy-response">Copiar JSON</button>
+        </div>
+        <pre id="response-box">Esperando una accion...</pre>
+      </section>
+    </main>
+  </body>
+</html>
