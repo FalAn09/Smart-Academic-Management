@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   frontend:
     build:
@@ -13,3 +11,4 @@ services:
 networks:
   smart-campus:
     external: true
+    name: smart-academic-management_smart-campus
