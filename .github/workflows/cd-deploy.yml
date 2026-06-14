@@ -1,12 +1,12 @@
-name: CD - Deploy on Aws
+name: CD - Build and Push to Docker Hub
 
 on:
   push:
     branches: [ "qa" ] # Triggered when merging to the QA branch
 
 jobs:
-  build-and-deploy:
-    name: Build Images and Deploy
+  build-and-push:
+    name: Build Images and Push
     runs-on: ubuntu-latest
     steps:
       - name: Checkout of the code
@@ -16,9 +16,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+      
       - uses: pnpm/action-setup@v3
         with:
           version: 8
+      
       - run: pnpm install
 
       - name: Log in to Docker Hub
@@ -46,21 +48,4 @@ jobs:
           docker build -f packages/subject-service/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/subject-service:latest .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/subject-service:latest
 
-    # 2. SSH connection to the AWS instance to update
-      - name: Deploy to EC2 via SSH
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ec2-user
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            cd /home/ec2-user/app
-            
-            # Bring in the latest docker-compose.yml
-            git pull origin qa
-            
-            # Download the new images we just compiled
-            docker-compose pull
-            
-            # Restart services without dropping the database
-            docker-compose up -d --force-recreate auth-service enrollment-service subject-service
+    
