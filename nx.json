@@ -60,7 +60,8 @@
         "auth-service-e2e/**/*",
         "packages/auth-service-e2e/**/*",
         "packages/enrollment-service-e2e/**/*",
-        "packages/subject-service-e2e/**/*"
+        "packages/subject-service-e2e/**/*",
+        "packages/api-gateway-e2e/**/*"
       ]
     }
   ],
