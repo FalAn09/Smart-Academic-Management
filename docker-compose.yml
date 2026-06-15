@@ -157,6 +157,23 @@ services:
     networks:
       - smart-campus
 
+  # =========================
+  # FRONTEND
+  # =========================
+  frontend:
+    build:
+      context: ./fronted
+      dockerfile: Dockerfile
+    container_name: smart-campus-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - auth-service
+      - enrollment-service
+      - subject-service
+    networks:
+      - smart-campus
+
 networks:
   smart-campus:
     driver: bridge
