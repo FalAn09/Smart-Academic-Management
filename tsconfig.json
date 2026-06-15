@@ -11,6 +11,9 @@
     },
     {
       "path": "./packages/subject-service"
+    },
+    {
+      "path": "./packages/api-gateway"
     }
   ]
 }
