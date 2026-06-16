@@ -14,6 +14,9 @@
     },
     {
       "path": "./packages/api-gateway"
+    },
+    {
+      "path": "./packages/program-service"
     }
   ]
 }
