@@ -34,7 +34,9 @@
           </div>
           <p class="card-copy">Verifica tu sesion actual con JWT.</p>
           <div class="mini-actions">
-            <button class="ghost" data-action="validate-token">Validar token</button>
+            <button class="ghost" data-action="validate-token">
+              Validar token
+            </button>
             <button class="ghost" data-action="refresh-token">Refresh</button>
           </div>
         </article>
@@ -52,13 +54,34 @@
               <input name="code" placeholder="Codigo" required />
               <input name="name" placeholder="Nombre" required />
               <input name="description" placeholder="Descripcion" />
-              <input name="credits" type="number" min="1" placeholder="Creditos" required />
-              <input name="hours" type="number" min="1" placeholder="Horas" required />
+              <input
+                name="credits"
+                type="number"
+                min="1"
+                placeholder="Creditos"
+                required
+              />
+              <input
+                name="hours"
+                type="number"
+                min="1"
+                placeholder="Horas"
+                required
+              />
               <input name="semester" placeholder="Semestre" required />
               <input name="programId" placeholder="Program ID" required />
               <input name="professor" placeholder="Profesor opcional" />
-              <input name="maxCapacity" type="number" min="1" placeholder="Capacidad max" required />
-              <input name="prerequisites" placeholder="Prerequisitos opcional" />
+              <input
+                name="maxCapacity"
+                type="number"
+                min="1"
+                placeholder="Capacidad max"
+                required
+              />
+              <input
+                name="prerequisites"
+                placeholder="Prerequisitos opcional"
+              />
             </div>
             <button type="submit">Guardar materia</button>
           </form>
@@ -67,7 +90,9 @@
         <article class="card">
           <div class="card-head">
             <h2>Enrollment Service</h2>
-            <button class="ghost" data-action="health-enrollment">Health</button>
+            <button class="ghost" data-action="health-enrollment">
+              Health
+            </button>
           </div>
           <p class="card-copy">Crear matriculas y revisar resultados.</p>
 
@@ -77,7 +102,13 @@
               <input name="studentId" placeholder="Student ID" required />
               <input name="subjectId" placeholder="Subject ID" required />
               <input name="semester" placeholder="Semestre" required />
-              <input name="credits" type="number" min="1" placeholder="Creditos" required />
+              <input
+                name="credits"
+                type="number"
+                min="1"
+                placeholder="Creditos"
+                required
+              />
               <input name="professor" placeholder="Profesor opcional" />
             </div>
             <button type="submit">Guardar matricula</button>

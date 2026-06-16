@@ -9,7 +9,7 @@
   --accent-2: #8b5cf6;
   --success: #34d399;
   --shadow: 0 24px 80px rgba(2, 6, 23, 0.45);
-  font-family: "Segoe UI", Tahoma, sans-serif;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
 }
 
 * {
@@ -21,8 +21,16 @@ body {
   margin: 0;
   min-height: 100%;
   background:
-    radial-gradient(circle at top left, rgba(139, 92, 246, 0.22), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(110, 231, 255, 0.18), transparent 35%),
+    radial-gradient(
+      circle at top left,
+      rgba(139, 92, 246, 0.22),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(110, 231, 255, 0.18),
+      transparent 35%
+    ),
     var(--bg);
   color: var(--text);
 }
@@ -234,7 +242,10 @@ select:focus {
 button {
   cursor: pointer;
   padding: 11px 16px;
-  transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+  transition:
+    transform 0.16s ease,
+    border-color 0.16s ease,
+    background 0.16s ease;
 }
 
 button:hover {
@@ -242,8 +253,12 @@ button:hover {
   border-color: rgba(110, 231, 255, 0.45);
 }
 
-button[type="submit"] {
-  background: linear-gradient(135deg, rgba(110, 231, 255, 0.22), rgba(139, 92, 246, 0.32));
+button[type='submit'] {
+  background: linear-gradient(
+    135deg,
+    rgba(110, 231, 255, 0.22),
+    rgba(139, 92, 246, 0.32)
+  );
   border-color: rgba(110, 231, 255, 0.25);
 }
 
@@ -278,7 +293,12 @@ button[type="submit"] {
 
 .divider {
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.38), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(148, 163, 184, 0.38),
+    transparent
+  );
 }
 
 #response-box {

@@ -66,7 +66,9 @@ async function requestJson(url, options = {}) {
   }
 
   if (!response.ok) {
-    throw new Error(typeof data === 'string' ? data : JSON.stringify(data, null, 2));
+    throw new Error(
+      typeof data === 'string' ? data : JSON.stringify(data, null, 2),
+    );
   }
 
   return data;
@@ -111,10 +113,9 @@ async function submitForm(form, url, method = 'POST') {
     setResponse(
       {
         error: error.message,
-        hint:
-          'Si ves error de red, revisa que el frontend comparta red con auth-service, enrollment-service y subject-service.',
+        hint: 'Si ves error de red, revisa que el frontend comparta red con auth-service, enrollment-service y subject-service.',
       },
-      true
+      true,
     );
   }
 }
@@ -189,17 +190,29 @@ if (isDashboard()) {
   const user = getUser();
   const sessionUser = document.getElementById('session-user');
   if (sessionUser && user) {
-    sessionUser.textContent = user.username ? `@${user.username}` : 'Sesion activa';
+    sessionUser.textContent = user.username
+      ? `@${user.username}`
+      : 'Sesion activa';
   }
 
   wireForm(subjectForm, endpoints.subject);
   wireForm(enrollmentForm, endpoints.enrollment);
 
-  const healthSubjectButton = document.querySelector('[data-action="health-subject"]');
-  const healthEnrollmentButton = document.querySelector('[data-action="health-enrollment"]');
-  const loadProfileButton = document.querySelector('[data-action="load-profile"]');
-  const validateTokenButton = document.querySelector('[data-action="validate-token"]');
-  const refreshTokenButton = document.querySelector('[data-action="refresh-token"]');
+  const healthSubjectButton = document.querySelector(
+    '[data-action="health-subject"]',
+  );
+  const healthEnrollmentButton = document.querySelector(
+    '[data-action="health-enrollment"]',
+  );
+  const loadProfileButton = document.querySelector(
+    '[data-action="load-profile"]',
+  );
+  const validateTokenButton = document.querySelector(
+    '[data-action="validate-token"]',
+  );
+  const refreshTokenButton = document.querySelector(
+    '[data-action="refresh-token"]',
+  );
 
   if (healthSubjectButton) {
     healthSubjectButton.addEventListener('click', async () => {
@@ -253,10 +266,14 @@ if (isDashboard()) {
       try {
         const data = await requestJson(`${endpoints.auth}/refresh-token`, {
           method: 'POST',
-          body: JSON.stringify({ refreshToken: localStorage.getItem('sam_refresh_token') || '' }),
+          body: JSON.stringify({
+            refreshToken: localStorage.getItem('sam_refresh_token') || '',
+          }),
         });
-        if (data?.data?.accessToken) localStorage.setItem('sam_access_token', data.data.accessToken);
-        if (data?.data?.refreshToken) localStorage.setItem('sam_refresh_token', data.data.refreshToken);
+        if (data?.data?.accessToken)
+          localStorage.setItem('sam_access_token', data.data.accessToken);
+        if (data?.data?.refreshToken)
+          localStorage.setItem('sam_refresh_token', data.data.refreshToken);
         setResponse(data);
       } catch (error) {
         setResponse({ error: error.message }, true);

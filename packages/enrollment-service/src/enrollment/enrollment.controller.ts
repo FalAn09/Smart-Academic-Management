@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards, Inject } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  UseGuards,
+  Inject,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { EnrollmentService } from './enrollment.service';
 import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
@@ -6,14 +16,16 @@ import { UpdateEnrollmentDto } from './dto/update-enrollment.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @ApiTags('Gestión de Matrículas (Enrollments)')
-@Controller('api/v1/enrollments/data') 
+@Controller('api/v1/enrollments/data')
 export class EnrollmentController {
   constructor(
     private readonly enrollmentService: EnrollmentService,
     @Inject(CACHE_MANAGER) private cacheManager: any,
   ) {}
 
-  @ApiOperation({ summary: 'Verificar salud del microservicio (Target Group AWS)' })
+  @ApiOperation({
+    summary: 'Verificar salud del microservicio (Target Group AWS)',
+  })
   @Get('health')
   healthCheck() {
     return { status: 'ok', timestamp: new Date().toISOString() };
@@ -23,7 +35,7 @@ export class EnrollmentController {
   @Post()
   async createEnrollment(@Body() createEnrollmentDto: CreateEnrollmentDto) {
     const enrollment = await this.enrollmentService.create(createEnrollmentDto);
-    await this.cacheManager.del('enrollments'); 
+    await this.cacheManager.del('enrollments');
     return {
       statusCode: 201,
       message: 'Enrollment created successfully',
@@ -31,7 +43,9 @@ export class EnrollmentController {
     };
   }
 
-  @ApiOperation({ summary: 'Obtener el listado completo de matrículas (Utiliza Caché Redis)' })
+  @ApiOperation({
+    summary: 'Obtener el listado completo de matrículas (Utiliza Caché Redis)',
+  })
   @Get()
   async getAllEnrollments() {
     const cached = await this.cacheManager.get('enrollments');
@@ -52,7 +66,9 @@ export class EnrollmentController {
     };
   }
 
-  @ApiOperation({ summary: 'Obtener todas las matrículas de un estudiante específico' })
+  @ApiOperation({
+    summary: 'Obtener todas las matrículas de un estudiante específico',
+  })
   @Get('student/:studentId')
   async getStudentEnrollments(@Param('studentId') studentId: string) {
     const enrollments = await this.enrollmentService.findByStudentId(studentId);
@@ -74,13 +90,18 @@ export class EnrollmentController {
     };
   }
 
-  @ApiOperation({ summary: 'Actualizar el estado o datos de una matrícula existente' })
+  @ApiOperation({
+    summary: 'Actualizar el estado o datos de una matrícula existente',
+  })
   @Put(':id')
   async updateEnrollment(
     @Param('id') id: string,
     @Body() updateEnrollmentDto: UpdateEnrollmentDto,
   ) {
-    const enrollment = await this.enrollmentService.update(id, updateEnrollmentDto);
+    const enrollment = await this.enrollmentService.update(
+      id,
+      updateEnrollmentDto,
+    );
     await this.cacheManager.del('enrollments');
     return {
       statusCode: 200,
@@ -100,7 +121,9 @@ export class EnrollmentController {
     };
   }
 
-  @ApiOperation({ summary: 'Validar disponibilidad de cupos para una asignatura' })
+  @ApiOperation({
+    summary: 'Validar disponibilidad de cupos para una asignatura',
+  })
   @Post('validate-quota')
   async validateQuota(
     @Body() data: { subjectId: string; requiredSpots: number },
