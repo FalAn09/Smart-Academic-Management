@@ -1,15 +1,15 @@
-name: CD - Build and Push to Docker Hub
+name: CD - Build and Push
 
 on:
   push:
-    branches: ["qa", "main"] # Triggered when merging to the QA branch
+    branches: ["qa", "main"] 
 
 jobs:
   build-and-push:
     name: Build Images and Push
     runs-on: ubuntu-latest
     env:
-      NX_NO_CLOUD: true # <-- ESTA ES LA MAGIA QUE APAGA EL BLOQUEO
+      NX_NO_CLOUD: true
     steps:
       - name: Checkout of the code
         uses: actions/checkout@v4
