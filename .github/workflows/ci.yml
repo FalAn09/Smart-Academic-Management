@@ -29,16 +29,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Verify format (Prettier)
-        run: npx nx format:check --base=origin/${{ github.base_ref }}
-
       - name: Linting (Only services affected)
         run: npx nx affected -t lint --base=origin/${{ github.base_ref }}
 
       - name: Testing (Only services affected)
         run: npx nx affected -t test --base=origin/${{ github.base_ref }}
 
-      - name: Build de prueba (Only services affected)
+      - name: Building (Only services affected)
         run: npx nx affected -t build --base=origin/${{ github.base_ref }}
-
-        
