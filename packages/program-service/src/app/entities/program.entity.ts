@@ -1,12 +1,31 @@
-// packages/program-service/src/app/entities/program.entity.ts
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+
+@Entity('programs')
 export class Program {
-  id: string; // UUID
-  code: string; // Ej: "ISI-001" (Código único)
-  name: string; // Ej: "Ingeniería en Sistemas de Información"
-  description: string; // Descripción del perfil profesional
-  totalSemesters: number; // Ej: 10 (Duración de la carrera)
-  degreeTitle: string; // Ej: "Ingeniero/a en Sistemas"
-  isActive: boolean; // Para soft-deletes (no borrar carreras históricas)
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ type: 'varchar', unique: true })
+  code: string;
+
+  @Column({ type: 'varchar' })
+  name: string;
+
+  @Column({ type: 'text', nullable: true })
+  description: string;
+
+  @Column({ type: 'int' })
+  totalSemesters: number;
+
+  @Column({ type: 'varchar' })
+  degreeTitle: string;
+
+  @Column({ type: 'boolean', default: true })
+  isActive: boolean;
+
+  @CreateDateColumn()
   createdAt: Date;
+
+  @UpdateDateColumn()
   updatedAt: Date;
 }
