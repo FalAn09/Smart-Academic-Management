@@ -61,6 +61,25 @@ services:
       timeout: 5s
       retries: 5
 
+  postgres-program:
+    image: postgres:15-alpine
+    container_name: postgres-program
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: program_db
+    ports:
+      - "5435:5432" # Un puerto local libre
+    volumes:
+      - postgres-program-data:/var/lib/postgresql/data
+    networks:
+      - smart-campus
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # Redis Cache
   redis:
     image: redis:7-alpine
@@ -176,6 +195,28 @@ services:
       - enrollment-service
       - subject-service
 
+
+  program-service:
+    build:
+      context: .
+      dockerfile: packages/program-service/Dockerfile
+    container_name: program-service
+    environment:
+      # Conexión a su propia base de datos (puerto interno 5432 de Docker)
+      - DB_HOST=postgres-program
+      - DB_PORT=5432
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=program_db
+      - REDIS_HOST=redis
+    depends_on:
+      postgres-program:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - smart-campus
+
 networks:
   smart-campus:
     driver: bridge
@@ -184,4 +225,5 @@ volumes:
   postgres-auth-data:
   postgres-enrollment-data:
   postgres-subject-data:
+  postgres-program-data:
   redis-data:
