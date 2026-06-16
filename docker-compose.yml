@@ -197,18 +197,19 @@ services:
 
 
   program-service:
-    build:
-      context: .
-      dockerfile: packages/program-service/Dockerfile
+    image: dapaeza/program-service:latest
     container_name: program-service
     environment:
-      # Conexión a su propia base de datos (puerto interno 5432 de Docker)
-      - DB_HOST=postgres-program
-      - DB_PORT=5432
-      - DB_USERNAME=postgres
-      - DB_PASSWORD=postgres
-      - DB_NAME=program_db
-      - REDIS_HOST=redis
+      NODE_ENV: production
+      PORT: 3003
+      DB_HOST: postgres-program
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: program_db
+      REDIS_HOST: redis
+    ports:
+      - "3003:3003"
     depends_on:
       postgres-program:
         condition: service_healthy
