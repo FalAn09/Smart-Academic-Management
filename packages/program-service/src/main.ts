@@ -13,7 +13,9 @@ async function bootstrap() {
   // Configuración de Swagger
   const config = new DocumentBuilder()
     .setTitle('SMART CAMPUS UCE - Program Service')
-    .setDescription('API para la gestión de programas y carreras académicas de la universidad.')
+    .setDescription(
+      'API para la gestión de programas y carreras académicas de la universidad.',
+    )
     .setVersion('1.0')
     .build();
 

@@ -10,13 +10,13 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: auth_db
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres-auth-data:/var/lib/postgresql/data
     networks:
       - smart-campus
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -30,13 +30,13 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: enrollment_db
     ports:
-      - "5433:5432"
+      - '5433:5432'
     volumes:
       - postgres-enrollment-data:/var/lib/postgresql/data
     networks:
       - smart-campus
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -50,13 +50,13 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: subject_db
     ports:
-      - "5434:5432"
+      - '5434:5432'
     volumes:
       - postgres-subject-data:/var/lib/postgresql/data
     networks:
       - smart-campus
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -69,13 +69,13 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: program_db
     ports:
-      - "5435:5432" # Un puerto local libre
+      - '5435:5432' # Un puerto local libre
     volumes:
       - postgres-program-data:/var/lib/postgresql/data
     networks:
       - smart-campus
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -85,14 +85,14 @@ services:
     image: redis:7-alpine
     container_name: redis-cache
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - redis-data:/data
     networks:
       - smart-campus
     command: redis-server --appendonly yes
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -113,11 +113,11 @@ services:
       DB_PASSWORD: postgres
       DB_DATABASE: auth_db
       # Se eliminó el símbolo $ y se agregaron comillas dobles
-      JWT_SECRET: "your_jwt_secret_key_change_in_production_SuP3rS3cr3tK3y"
-      REFRESH_TOKEN_SECRET: "your_refresh_token_secret_SuP3rR3fr3shS3cr3t"
+      JWT_SECRET: 'your_jwt_secret_key_change_in_production_SuP3rS3cr3tK3y'
+      REFRESH_TOKEN_SECRET: 'your_refresh_token_secret_SuP3rR3fr3shS3cr3t'
       REFRESH_TOKEN_EXPIRATION: 30d
     ports:
-      - "3000:3000"
+      - '3000:3000'
     depends_on:
       postgres-auth:
         condition: service_healthy
@@ -138,11 +138,11 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
-      JWT_SECRET: "your_jwt_secret_key_change_in_production_SuP3rS3cr3tK3y"
+      JWT_SECRET: 'your_jwt_secret_key_change_in_production_SuP3rS3cr3tK3y'
       AUTH_SERVICE_URL: http://auth-service:3000
       SUBJECT_SERVICE_URL: http://subject-service:3002
     ports:
-      - "3001:3001"
+      - '3001:3001'
     depends_on:
       postgres-enrollment:
         condition: service_healthy
@@ -165,10 +165,10 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 1
-      JWT_SECRET: "your_jwt_secret_key_change_in_production_SuP3rS3cr3tK3y"
+      JWT_SECRET: 'your_jwt_secret_key_change_in_production_SuP3rS3cr3tK3y'
       AUTH_SERVICE_URL: http://auth-service:3000
     ports:
-      - "3002:3002"
+      - '3002:3002'
     depends_on:
       postgres-subject:
         condition: service_healthy
@@ -187,14 +187,13 @@ services:
       ENROLLMENT_SERVICE_URL: http://enrollment-service:3001
       SUBJECT_SERVICE_URL: http://subject-service:3002
     ports:
-      - "8080:8080"
+      - '8080:8080'
     networks:
       - smart-campus
     depends_on:
       - auth-service
       - enrollment-service
       - subject-service
-
 
   program-service:
     image: dapaeza/program-service:latest
@@ -209,7 +208,7 @@ services:
       DB_NAME: program_db
       REDIS_HOST: redis
     ports:
-      - "3003:3003"
+      - '3003:3003'
     depends_on:
       postgres-program:
         condition: service_healthy

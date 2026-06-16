@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Inject, ParseUUIDPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  Inject,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { ProgramService } from './program.service';
 import { CreateProgramDto } from './dto/create-program.dto';
@@ -13,17 +23,23 @@ export class ProgramController {
     @Inject(CACHE_MANAGER) private cacheManager: any,
   ) {}
 
-  @ApiOperation({ summary: 'Verificar salud del microservicio (Target Group AWS)' })
+  @ApiOperation({
+    summary: 'Verificar salud del microservicio (Target Group AWS)',
+  })
   @Get('health')
   healthCheck() {
-    return { status: 'ok', service: 'program-service', timestamp: new Date().toISOString() };
+    return {
+      status: 'ok',
+      service: 'program-service',
+      timestamp: new Date().toISOString(),
+    };
   }
 
   @ApiOperation({ summary: 'Crear un nuevo programa académico' })
   @Post()
   async createProgram(@Body() createProgramDto: CreateProgramDto) {
     const program = await this.programService.create(createProgramDto);
-    await this.cacheManager.del('programs'); 
+    await this.cacheManager.del('programs');
     return {
       statusCode: 201,
       message: 'Program created successfully',
@@ -31,7 +47,9 @@ export class ProgramController {
     };
   }
 
-  @ApiOperation({ summary: 'Obtener el listado completo de programas (Utiliza Caché Redis)' })
+  @ApiOperation({
+    summary: 'Obtener el listado completo de programas (Utiliza Caché Redis)',
+  })
   @Get()
   async getAllPrograms() {
     const cached = await this.cacheManager.get('programs');
@@ -63,7 +81,9 @@ export class ProgramController {
     };
   }
 
-  @ApiOperation({ summary: 'Actualizar la información de un programa existente' })
+  @ApiOperation({
+    summary: 'Actualizar la información de un programa existente',
+  })
   @Put('detail/:id')
   async updateProgram(
     @Param('id', ParseUUIDPipe) id: string,

@@ -1,4 +1,12 @@
-import { Controller, Post, Body, Get, UseGuards, Request, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  UseGuards,
+  Request,
+  Param,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
@@ -47,16 +55,18 @@ export class AuthController {
   // ==========================================================
   // NUEVO ENDPOINT INTERNO (Para comunicación con Enrollment)
   // ==========================================================
-  @ApiOperation({ summary: 'Uso interno: Obtener perfil por ID para otros microservicios' })
+  @ApiOperation({
+    summary: 'Uso interno: Obtener perfil por ID para otros microservicios',
+  })
   @Get('profile/:id')
   async getUserProfileById(@Param('id') id: string) {
     // IMPORTANTE: Asegúrate de tener un método 'findById' en tu auth.service.ts
     // Si tu método se llama distinto (como 'findOne' o 'getUserById'), cámbialo aquí.
-    const user = await this.authService.findById(id); 
-    
-    // Lo retornamos directamente (sin el wrapper de statusCode/data) 
+    const user = await this.authService.findById(id);
+
+    // Lo retornamos directamente (sin el wrapper de statusCode/data)
     // para que el desestructurado de Axios en enrollment.service.ts funcione perfecto
-    return user; 
+    return user;
   }
 
   @ApiBearerAuth()
@@ -81,7 +91,9 @@ export class AuthController {
     };
   }
 
-  @ApiOperation({ summary: 'Refrescar el token de acceso usando el Refresh Token' })
+  @ApiOperation({
+    summary: 'Refrescar el token de acceso usando el Refresh Token',
+  })
   @Post('refresh-token')
   async refreshToken(@Body() data: { refreshToken: string }) {
     const tokens = await this.authService.refreshToken(data.refreshToken);

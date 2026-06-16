@@ -32,7 +32,10 @@ export class ProgramService {
     return program;
   }
 
-  async update(id: string, updateProgramDto: UpdateProgramDto): Promise<Program> {
+  async update(
+    id: string,
+    updateProgramDto: UpdateProgramDto,
+  ): Promise<Program> {
     const program = await this.findById(id);
     Object.assign(program, updateProgramDto);
     return await this.programRepository.save(program);
@@ -41,7 +44,7 @@ export class ProgramService {
   async delete(id: string): Promise<void> {
     const program = await this.findById(id);
     // Soft-delete: en lugar de borrar la carrera, la desactivamos para no romper el historial de matrículas
-    program.isActive = false; 
+    program.isActive = false;
     await this.programRepository.save(program);
   }
 }

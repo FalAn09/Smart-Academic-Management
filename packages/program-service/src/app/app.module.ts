@@ -13,13 +13,13 @@ import { Program } from './entities/program.entity';
       host: process.env.REDIS_HOST || 'localhost',
       port: 6379,
     }),
-    
+
     // 2. Configuración de la base de datos Postgres
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST || 'localhost',
       // Usamos el puerto 5435 que definiste en tu docker-compose local
-      port: parseInt(process.env.DB_PORT, 10) || 5435, 
+      port: parseInt(process.env.DB_PORT, 10) || 5435,
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_NAME || 'program_db',
