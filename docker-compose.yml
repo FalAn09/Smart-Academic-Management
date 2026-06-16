@@ -61,6 +61,25 @@ services:
       timeout: 5s
       retries: 5
 
+  postgres-program:
+    image: postgres:15-alpine
+    container_name: postgres-program
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: program_db
+    ports:
+      - "5435:5432" # Un puerto local libre
+    volumes:
+      - postgres-program-data:/var/lib/postgresql/data
+    networks:
+      - smart-campus
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   # Redis Cache
   redis:
     image: redis:7-alpine
@@ -93,8 +112,9 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
       DB_DATABASE: auth_db
-      JWT_SECRET: your_jwt_secret_key_change_in_production_$uP3rS3cr3tK3y
-      REFRESH_TOKEN_SECRET: your_refresh_token_secret_$uP3rR3fr3shS3cr3t
+      # Se eliminó el símbolo $ y se agregaron comillas dobles
+      JWT_SECRET: "your_jwt_secret_key_change_in_production_SuP3rS3cr3tK3y"
+      REFRESH_TOKEN_SECRET: "your_refresh_token_secret_SuP3rR3fr3shS3cr3t"
       REFRESH_TOKEN_EXPIRATION: 30d
     ports:
       - "3000:3000"
@@ -118,7 +138,7 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
-      JWT_SECRET: your_jwt_secret_key_change_in_production_$uP3rS3cr3tK3y
+      JWT_SECRET: "your_jwt_secret_key_change_in_production_SuP3rS3cr3tK3y"
       AUTH_SERVICE_URL: http://auth-service:3000
       SUBJECT_SERVICE_URL: http://subject-service:3002
     ports:
@@ -145,12 +165,53 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 1
-      JWT_SECRET: your_jwt_secret_key_change_in_production_$uP3rS3cr3tK3y
+      JWT_SECRET: "your_jwt_secret_key_change_in_production_SuP3rS3cr3tK3y"
       AUTH_SERVICE_URL: http://auth-service:3000
     ports:
       - "3002:3002"
     depends_on:
       postgres-subject:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - smart-campus
+
+  api-gateway:
+    image: dapaeza/api-gateway:latest
+    container_name: api-gateway
+    environment:
+      NODE_ENV: production
+      PORT: 8080
+      AUTH_SERVICE_URL: http://auth-service:3000
+      ENROLLMENT_SERVICE_URL: http://enrollment-service:3001
+      SUBJECT_SERVICE_URL: http://subject-service:3002
+    ports:
+      - "8080:8080"
+    networks:
+      - smart-campus
+    depends_on:
+      - auth-service
+      - enrollment-service
+      - subject-service
+
+
+  program-service:
+    image: dapaeza/program-service:latest
+    container_name: program-service
+    environment:
+      NODE_ENV: production
+      PORT: 3003
+      DB_HOST: postgres-program
+      DB_PORT: 5432
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: program_db
+      REDIS_HOST: redis
+    ports:
+      - "3003:3003"
+    depends_on:
+      postgres-program:
         condition: service_healthy
       redis:
         condition: service_healthy
@@ -165,4 +226,5 @@ volumes:
   postgres-auth-data:
   postgres-enrollment-data:
   postgres-subject-data:
+  postgres-program-data:
   redis-data:
