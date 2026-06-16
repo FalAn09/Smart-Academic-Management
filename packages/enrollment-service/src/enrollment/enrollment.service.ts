@@ -64,11 +64,10 @@ export class EnrollmentService {
         });
         await this.studentRepository.save(student);
       } catch (error) {
-        // Añade este console.log temporalmente para que si vuelve a fallar,
-        // sepamos exactamente por qué fue (si es red o base de datos).
+        // Imprime el error real que devuelve el otro microservicio
         console.error(
-          'Error al sincronizar estudiante:',
-          error.message || error,
+          '[DEBUG AXIOS ERROR]:',
+          error.response?.data || error.message,
         );
         throw new NotFoundException('The student does not exist.');
       }

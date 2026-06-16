@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Academic Management | Login</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script defer src="/app.js"></script>
+  </head>
+  <body class="auth-page">
+    <div class="bg-shape bg-shape-1"></div>
+    <div class="bg-shape bg-shape-2"></div>
+
+    <main class="auth-shell">
+      <section class="auth-card">
+        <p class="eyebrow">Acceso</p>
+        <h1>Smart Academic Management</h1>
+        <p class="subtitle">
+          Inicia sesion para entrar al panel donde estan los microservicios.
+        </p>
+
+        <form id="login-form" class="stack">
+          <div class="form-grid single">
+            <input name="username" placeholder="Username" required />
+            <input
+              name="password"
+              type="password"
+              placeholder="Password"
+              required
+            />
+          </div>
+          <button type="submit">Entrar</button>
+        </form>
+
+        <p class="tiny-copy">
+          Si el login es correcto, te redirige automaticamente al dashboard.
+        </p>
+
+        <div class="divider"></div>
+
+        <div class="auth-subcard">
+          <h2>Registro</h2>
+          <p class="tiny-copy">Crea tu usuario para poder iniciar sesion.</p>
+
+          <form id="register-form" class="stack">
+            <div class="form-grid">
+              <input name="username" placeholder="Username" required />
+              <input name="email" type="email" placeholder="Email" required />
+              <input name="firstName" placeholder="Nombre" required />
+              <input name="lastName" placeholder="Apellido" required />
+              <input
+                name="password"
+                type="password"
+                placeholder="Password"
+                required
+              />
+              <select name="role" required>
+                <option value="STUDENT">STUDENT</option>
+                <option value="PROFESSOR">PROFESSOR</option>
+                <option value="DEAN">DEAN</option>
+                <option value="ADMIN">ADMIN</option>
+              </select>
+              <input name="studentId" placeholder="Student ID opcional" />
+              <input name="professorId" placeholder="Professor ID opcional" />
+            </div>
+            <button type="submit">Registrarme</button>
+          </form>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Academic Management | Dashboard</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script defer src="/app.js"></script>
+  </head>
+  <body>
+    <div class="bg-shape bg-shape-1"></div>
+    <div class="bg-shape bg-shape-2"></div>
+
+    <main class="shell">
+      <header class="hero dashboard-head">
+        <div>
+          <p class="eyebrow">Dashboard</p>
+          <h1>Smart Academic Management</h1>
+          <p class="subtitle">
+            Panel basico para auth, subjects y enrollments.
+          </p>
+        </div>
+        <div class="header-actions">
+          <span id="session-user" class="chip">Sesión activa</span>
+          <button class="ghost" id="logout-button" type="button">Salir</button>
+        </div>
+      </header>
+
+      <section class="grid">
+        <article class="card">
+          <div class="card-head">
+            <h2>Auth Service</h2>
+            <button class="ghost" data-action="load-profile">Perfil</button>
+          </div>
+          <p class="card-copy">Verifica tu sesion actual con JWT.</p>
+          <div class="mini-actions">
+            <button class="ghost" data-action="validate-token">
+              Validar token
+            </button>
+            <button class="ghost" data-action="refresh-token">Refresh</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h2>Subject Service</h2>
+            <button class="ghost" data-action="health-subject">Health</button>
+          </div>
+          <p class="card-copy">Crear materias y consultar el estado.</p>
+
+          <form id="subject-form" class="stack">
+            <h3>Nueva materia</h3>
+            <div class="form-grid">
+              <input name="code" placeholder="Codigo" required />
+              <input name="name" placeholder="Nombre" required />
+              <input name="description" placeholder="Descripcion" />
+              <input
+                name="credits"
+                type="number"
+                min="1"
+                placeholder="Creditos"
+                required
+              />
+              <input
+                name="hours"
+                type="number"
+                min="1"
+                placeholder="Horas"
+                required
+              />
+              <input name="semester" placeholder="Semestre" required />
+              <input name="programId" placeholder="Program ID" required />
+              <input name="professor" placeholder="Profesor opcional" />
+              <input
+                name="maxCapacity"
+                type="number"
+                min="1"
+                placeholder="Capacidad max"
+                required
+              />
+              <input
+                name="prerequisites"
+                placeholder="Prerequisitos opcional"
+              />
+            </div>
+            <button type="submit">Guardar materia</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h2>Enrollment Service</h2>
+            <button class="ghost" data-action="health-enrollment">
+              Health
+            </button>
+          </div>
+          <p class="card-copy">Crear matriculas y revisar resultados.</p>
+
+          <form id="enrollment-form" class="stack">
+            <h3>Nueva matricula</h3>
+            <div class="form-grid">
+              <input name="studentId" placeholder="Student ID" required />
+              <input name="subjectId" placeholder="Subject ID" required />
+              <input name="semester" placeholder="Semestre" required />
+              <input
+                name="credits"
+                type="number"
+                min="1"
+                placeholder="Creditos"
+                required
+              />
+              <input name="professor" placeholder="Profesor opcional" />
+            </div>
+            <button type="submit">Guardar matricula</button>
+          </form>
+        </article>
+      </section>
+
+      <section class="response-panel">
+        <div class="response-head">
+          <h2>Respuesta</h2>
+          <button class="ghost" id="copy-response">Copiar JSON</button>
+        </div>
+        <pre id="response-box">Cargando panel...</pre>
+      </section>
+    </main>
+  </body>
+</html>
