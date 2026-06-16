@@ -30,7 +30,7 @@ jobs:
         run: pnpm install
 
       - name: Verify format (Prettier)
-        run: npx nx format:check
+        run: npx nx format:check --base=origin/${{ github.base_ref }}
 
       # AÑADIDO: --base=origin/${{ github.base_ref }} le dice a Nx que se compare con la rama destino del PR (ej. origin/qa)
       - name: Linting (Only services affected)
