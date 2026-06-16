@@ -24,6 +24,7 @@ import { Program } from './entities/program.entity';
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_NAME || 'program_db',
       entities: [Program],
+      autoLoadEntities: true,
       synchronize: true, // En desarrollo, NestJS creará la tabla 'program' por ti
     }),
 
