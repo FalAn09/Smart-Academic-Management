@@ -2,7 +2,7 @@ name: CD - Build and Push to Docker Hub
 
 on:
   push:
-    branches: ['qa'] # Triggered when merging to the QA branch
+    branches: ["qa", "main"] # Triggered when merging to the QA branch
 
 jobs:
   build-and-push:
