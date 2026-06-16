@@ -41,3 +41,5 @@ jobs:
 
       - name: Build de prueba (Only services affected)
         run: npx nx affected -t build --base=origin/${{ github.base_ref }}
+
+      # AÑADIDO: Verificación de que los Dockerfiles estén presentes en los servicios afectados
