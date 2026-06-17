@@ -113,7 +113,7 @@ async function submitForm(form, url, method = 'POST') {
     setResponse(
       {
         error: error.message,
-        hint: 'Si ves error de red, revisa que el frontend comparta red con auth-service, enrollment-service y subject-service.',
+        hint: 'Si ves error de red, revisa que el frontend comparta red con api-gateway y los microservicios del backend.',
       },
       true,
     );
