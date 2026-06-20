@@ -1,7 +1,8 @@
+// 1. CORRECCIÓN DE RUTAS (Agregar el /v1 que exige NestJS)
 const endpoints = {
-  auth: '/api/auth',
-  subject: '/api/subjects/data',
-  enrollment: '/api/enrollments/data',
+  auth: '/api/v1/auth',
+  subject: '/api/v1/subjects',
+  enrollment: '/api/v1/enrollments',
 };
 
 const responseBox = document.getElementById('response-box');
@@ -32,9 +33,19 @@ function setResponse(value, isError = false) {
 function normalizePayload(form) {
   const payload = Object.fromEntries(new FormData(form).entries());
   const numericFields = new Set(['credits', 'hours', 'maxCapacity']);
+  
+  // Lista de campos que el backend espera explícitamente como strings (añade más si los requieres)
+  const stringFields = new Set(['studentId', 'professorId', 'name', 'code']);
 
   for (const [key, value] of Object.entries(payload)) {
     if (value === '') {
+      // Si el campo está vacío pero es un string esperado por el backend, lo dejamos como ""
+      if (stringFields.has(key)) {
+        payload[key] = '';
+        continue;
+      }
+      
+      // Para cualquier otro campo que no use el backend de forma obligatoria, se elimina
       delete payload[key];
       continue;
     }
@@ -169,13 +180,19 @@ if (registerForm) {
 
     const payload = normalizePayload(registerForm);
 
+    // Si por alguna razón normalizePayload los borró, los reinyectamos con texto real
+    payload.studentId = payload.studentId || "NONE";
+    payload.professorId = payload.professorId || "NONE";
+
+    console.log("Payload de fuerza enviado:", payload);
+
     try {
       await requestJson(`${endpoints.auth}/register`, {
         method: 'POST',
         body: JSON.stringify(payload),
       });
       registerForm.reset();
-      alert('Registro creado con exito. Ahora puedes iniciar sesion.');
+      alert('Registro creado con éxito. Ahora puedes iniciar sesión.');
     } catch (error) {
       alert(`No se pudo registrar: ${error.message}`);
     }
