@@ -11,11 +11,11 @@ jobs:
     name: Terraform Plan & Apply
     runs-on: ubuntu-latest
     
-    # Inyectamos credenciales temporales de AWS desde los secretos de GitHub
+    # 1. Llamamos a los secretos con prefijo QA_
     env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.QA_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.QA_AWS_SECRET_ACCESS_KEY }}
+      AWS_SESSION_TOKEN: ${{ secrets.QA_AWS_SESSION_TOKEN }}
 
     steps:
       - name: Checkout of the code
