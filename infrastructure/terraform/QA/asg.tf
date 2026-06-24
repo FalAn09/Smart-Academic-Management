@@ -1,12 +1,20 @@
-resource "aws_launch_template" "auth_lt" {
-  name_prefix            = "auth-lt-"
+resource "aws_launch_template" "smart_campus_lt" {
+  name_prefix            = "smart-campus-node-lt-"
   image_id               = data.aws_ami.amazon_linux.id
   instance_type          = "t2.micro"
-  key_name               = "vockey" # Vital para AWS Academy
+  key_name               = "vockey"
   vpc_security_group_ids = [aws_security_group.instances_sg.id]
 
   user_data = base64encode(<<-EOF
 #!/bin/bash
+# 1. CREAR MEMORIA SWAP (VITAL PARA T2.MICRO CON MULTIPLES MICROSERVICIOS)
+dd if=/dev/zero of=/swapfile bs=128M count=16
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+echo "/swapfile swap swap defaults 0 0" >> /etc/fstab
+
+# 2. ACTUALIZAR E INSTALAR DOCKER
 dnf update -y
 dnf install -y docker git
 systemctl enable docker
@@ -16,10 +24,10 @@ usermod -aG docker ec2-user
 curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 chmod +x /usr/local/bin/docker-compose
 
+# 3. CONFIGURAR APLICACIÓN
 mkdir -p /home/ec2-user/app
 cd /home/ec2-user/app
 
-# Descargar solo el archivo docker-compose.yml desde la rama qa
 curl -O https://raw.githubusercontent.com/FalAn09/Smart-Academic-Management/qa/docker-compose.yml
 
 cat > .env << EOL
@@ -31,126 +39,25 @@ EOL
 
 chown -R ec2-user:ec2-user /home/ec2-user/app
 
-# Descargar imagen y levantar
-docker-compose pull auth-service
-docker-compose up -d auth-service postgres-auth
+# 4. DESCARGAR Y LEVANTAR TODA LA ARQUITECTURA
+# Al no especificar servicios al final, docker-compose levanta todo el archivo
+docker-compose pull
+docker-compose up -d
 EOF
   )
 }
 
-resource "aws_launch_template" "enrollment_lt" {
-  name_prefix            = "enrollment-lt-"
-  image_id               = data.aws_ami.amazon_linux.id
-  instance_type          = "t2.micro"
-  key_name               = "vockey"
-  vpc_security_group_ids = [aws_security_group.instances_sg.id]
-
-  user_data = base64encode(<<-EOF
-#!/bin/bash
-dnf update -y
-dnf install -y docker git
-systemctl enable docker
-systemctl start docker
-usermod -aG docker ec2-user
-
-curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
-
-mkdir -p /home/ec2-user/app
-cd /home/ec2-user/app
-
-curl -O https://raw.githubusercontent.com/FalAn09/Smart-Academic-Management/qa/docker-compose.yml
-
-cat > .env << EOL
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-JWT_SECRET=secret
-EOL
-
-chown -R ec2-user:ec2-user /home/ec2-user/app
-
-docker-compose pull enrollment-service
-docker-compose up -d enrollment-service postgres-enrollment redis
-EOF
-  )
-}
-
-resource "aws_launch_template" "subject_lt" {
-  name_prefix            = "subject-lt-"
-  image_id               = data.aws_ami.amazon_linux.id
-  instance_type          = "t2.micro"
-  key_name               = "vockey"
-  vpc_security_group_ids = [aws_security_group.instances_sg.id]
-
-  user_data = base64encode(<<-EOF
-#!/bin/bash
-dnf update -y
-dnf install -y docker git
-systemctl enable docker
-systemctl start docker
-usermod -aG docker ec2-user
-
-curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
-
-mkdir -p /home/ec2-user/app
-cd /home/ec2-user/app
-
-curl -O https://raw.githubusercontent.com/FalAn09/Smart-Academic-Management/qa/docker-compose.yml
-
-cat > .env << EOL
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-JWT_SECRET=secret
-EOL
-
-chown -R ec2-user:ec2-user /home/ec2-user/app
-
-docker-compose pull subject-service
-docker-compose up -d subject-service postgres-subject redis
-EOF
-  )
-}
-
-# --- AUTO SCALING GROUPS ---
-resource "aws_autoscaling_group" "auth_asg" {
-  name                = "auth-asg"
+# --- AUTO SCALING GROUP ÚNICO ---
+resource "aws_autoscaling_group" "smart_campus_asg" {
+  name                = "smart-campus-asg"
   desired_capacity    = 1
-  max_size            = 2
+  max_size            = 1  # Limitado a 1 para mantener todo en el mismo nodo
   min_size            = 1
   vpc_zone_identifier = data.aws_subnets.default.ids
-  target_group_arns   = [aws_lb_target_group.auth_tg.arn]
+  target_group_arns   = [aws_lb_target_group.gateway_tg.arn]
 
   launch_template {
-    id      = aws_launch_template.auth_lt.id
-    version = "$Latest"
-  }
-}
-
-resource "aws_autoscaling_group" "enrollment_asg" {
-  name                = "enrollment-asg"
-  desired_capacity    = 1
-  max_size            = 2
-  min_size            = 1
-  vpc_zone_identifier = data.aws_subnets.default.ids
-  target_group_arns   = [aws_lb_target_group.enrollment_tg.arn]
-
-  launch_template {
-    id      = aws_launch_template.enrollment_lt.id
-    version = "$Latest"
-  }
-}
-
-resource "aws_autoscaling_group" "subject_asg" {
-  name                = "subject-asg"
-  desired_capacity    = 1
-  max_size            = 2
-  min_size            = 1
-  vpc_zone_identifier = data.aws_subnets.default.ids
-  target_group_arns   = [aws_lb_target_group.subject_tg.arn]
-
-  launch_template {
-    id      = aws_launch_template.subject_lt.id
+    id      = aws_launch_template.smart_campus_lt.id
     version = "$Latest"
   }
 }
