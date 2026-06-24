@@ -11,10 +11,11 @@ jobs:
     name: Terraform Plan & Apply (PROD)
     runs-on: ubuntu-latest
     
+    # 2. Llamamos a los secretos con prefijo PROD_
     env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.PROD_AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
+      AWS_SESSION_TOKEN: ${{ secrets.PROD_AWS_SESSION_TOKEN }}
 
     steps:
       - name: Checkout of the code
@@ -28,7 +29,7 @@ jobs:
       - name: Terraform Init
         id: init
         run: |
-          cd infrastructure/terraform/PROD # Entramos a la carpeta de producción
+          cd infrastructure/terraform/PROD
           terraform init
 
       - name: Terraform Plan
