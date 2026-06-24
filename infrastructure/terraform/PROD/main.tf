@@ -1,15 +1,16 @@
 terraform {
   backend "s3" {
-    bucket         = "smart-campus-uce-tfstate-dapaeza-prod" # El nombre del bucket que creaste en el Paso 1
-    key            = "prod/terraform.tfstate"         # La ruta dentro del bucket donde se guardará el archivo
-    region         = "us-east-1"                      # La región de tu Learner Lab
-    encrypt        = true                             # Encriptar el estado en reposo
+    bucket         = "smart-campus-uce-tfstate-dapaeza"
+    key            = "qa/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
   }
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region     = "us-east-1"
 }
+
 data "aws_vpc" "default" {
   default = true
 }
@@ -52,18 +53,18 @@ resource "aws_security_group" "alb_sg" {
 
 resource "aws_security_group" "instances_sg" {
   name        = "smart_campus_instances_sg"
-  description = "Permitir trafico interno desde el ALB y entre instancias"
+  description = "Permitir trafico interno desde el ALB y SSH"
   vpc_id      = data.aws_vpc.default.id
 
-  # Permitir trafico desde el ALB
+  # Permitir trafico desde el ALB hacia el API Gateway (8080)
   ingress {
-    from_port       = 3000
-    to_port         = 3002
+    from_port       = 8080
+    to_port         = 8080
     protocol        = "tcp"
     security_groups = [aws_security_group.alb_sg.id]
   }
 
-  # NUEVO: Permitir que las instancias EC2 hablen entre ellas (Vital para Enrollment -> Auth/Subject)
+  # Permitir trafico interno total entre contenedores/instancia
   ingress {
     from_port = 0
     to_port   = 0
