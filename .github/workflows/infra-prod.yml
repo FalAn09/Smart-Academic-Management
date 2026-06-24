@@ -1,17 +1,16 @@
-name: Infrastructure - Terraform GitOps
+name: Infrastructure - PROD GitOps
 
 on:
   push:
-    branches: [ "qa" ]
+    branches: [ "main" ]
     paths:
-      - 'infrastructure/terraform/QA/**' # ¡Ruta actualizada para escuchar la carpeta correcta!
+      - 'infrastructure/terraform/PROD/**' # Escucha solo cambios en la carpeta PROD
 
 jobs:
   terraform:
-    name: Terraform Plan & Apply
+    name: Terraform Plan & Apply (PROD)
     runs-on: ubuntu-latest
     
-    # Inyectamos credenciales temporales de AWS desde los secretos de GitHub
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -29,17 +28,17 @@ jobs:
       - name: Terraform Init
         id: init
         run: |
-          cd infrastructure/terraform/QA # Entrar a la carpeta exacta de QA
+          cd infrastructure/terraform/PROD # Entramos a la carpeta de producción
           terraform init
 
-      - name: Terraform Plan (Changes Validation)
+      - name: Terraform Plan
         id: plan
         run: |
-          cd infrastructure/terraform/QA
+          cd infrastructure/terraform/PROD
           terraform plan -no-color
         continue-on-error: false
 
-      - name: Terraform Apply (Apply changes only to AWS)
+      - name: Terraform Apply
         run: |
-          cd infrastructure/terraform/QA
+          cd infrastructure/terraform/PROD
           terraform apply -auto-approve

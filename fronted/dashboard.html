@@ -17,7 +17,7 @@
           <p class="eyebrow">Dashboard</p>
           <h1>Smart Academic Management</h1>
           <p class="subtitle">
-            Panel basico para auth, subjects y enrollments.
+            Panel básico para auth, subjects y enrollments.
           </p>
         </div>
         <div class="header-actions">
@@ -32,7 +32,7 @@
             <h2>Auth Service</h2>
             <button class="ghost" data-action="load-profile">Perfil</button>
           </div>
-          <p class="card-copy">Verifica tu sesion actual con JWT.</p>
+          <p class="card-copy">Verifica tu sesión actual con JWT.</p>
           <div class="mini-actions">
             <button class="ghost" data-action="validate-token">
               Validar token
@@ -51,14 +51,16 @@
           <form id="subject-form" class="stack">
             <h3>Nueva materia</h3>
             <div class="form-grid">
-              <input name="code" placeholder="Codigo" required />
+              <input name="code" placeholder="Código" required />
               <input name="name" placeholder="Nombre" required />
-              <input name="description" placeholder="Descripcion" />
+              
+              <input name="description" value="NONE" placeholder="Descripción" />
+              
               <input
                 name="credits"
                 type="number"
                 min="1"
-                placeholder="Creditos"
+                placeholder="Créditos"
                 required
               />
               <input
@@ -70,7 +72,9 @@
               />
               <input name="semester" placeholder="Semestre" required />
               <input name="programId" placeholder="Program ID" required />
-              <input name="professor" placeholder="Profesor opcional" />
+              
+              <input name="professor" value="NONE" placeholder="Profesor opcional" />
+              
               <input
                 name="maxCapacity"
                 type="number"
@@ -78,9 +82,11 @@
                 placeholder="Capacidad max"
                 required
               />
+              
               <input
                 name="prerequisites"
-                placeholder="Prerequisitos opcional"
+                value="NONE"
+                placeholder="Prerrequisitos opcional"
               />
             </div>
             <button type="submit">Guardar materia</button>
@@ -94,10 +100,10 @@
               Health
             </button>
           </div>
-          <p class="card-copy">Crear matriculas y revisar resultados.</p>
+          <p class="card-copy">Crear matrículas y revisar resultados.</p>
 
           <form id="enrollment-form" class="stack">
-            <h3>Nueva matricula</h3>
+            <h3>Nueva matrícula</h3>
             <div class="form-grid">
               <input name="studentId" placeholder="Student ID" required />
               <input name="subjectId" placeholder="Subject ID" required />
@@ -106,12 +112,13 @@
                 name="credits"
                 type="number"
                 min="1"
-                placeholder="Creditos"
+                placeholder="Créditos"
                 required
               />
-              <input name="professor" placeholder="Profesor opcional" />
+              
+              <input name="professor" value="NONE" placeholder="Profesor opcional" />
             </div>
-            <button type="submit">Guardar matricula</button>
+            <button type="submit">Guardar matrícula</button>
           </form>
         </article>
       </section>
