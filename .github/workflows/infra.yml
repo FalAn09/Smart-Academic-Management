@@ -4,13 +4,14 @@ on:
   push:
     branches: [ "qa" ]
     paths:
-      - 'terraform/**' # VITAL! Only run if you change files inside the terraform folder
+      - 'infrastructure/terraform/QA/**' # ¡Ruta actualizada para escuchar la carpeta correcta!
+
 jobs:
   terraform:
     name: Terraform Plan & Apply
     runs-on: ubuntu-latest
     
-    # We inject temporary AWS credentials from GitHub secrets
+    # Inyectamos credenciales temporales de AWS desde los secretos de GitHub
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -23,22 +24,22 @@ jobs:
       - name: Configure Terraform in the Runner
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: 1.7.0 # You can use the version you have installed
+          terraform_version: 1.7.0
 
       - name: Terraform Init
         id: init
         run: |
-          cd terraform
+          cd infrastructure/terraform/QA # Entrar a la carpeta exacta de QA
           terraform init
 
       - name: Terraform Plan (Changes Validation)
         id: plan
         run: |
-          cd terraform
+          cd infrastructure/terraform/QA
           terraform plan -no-color
         continue-on-error: false
 
       - name: Terraform Apply (Apply changes only to AWS)
         run: |
-          cd terraform
+          cd infrastructure/terraform/QA
           terraform apply -auto-approve
