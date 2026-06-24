@@ -21,7 +21,7 @@ import { StudentEntity } from './enrollment/entities/student.entity';
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_DATABASE || 'enrollment_db',
       entities: [EnrollmentEntity, StudentEntity],
-      synchronize: process.env.NODE_ENV !== 'production',
+      synchronize: true,
       logging: process.env.NODE_ENV !== 'production',
     }),
     CacheModule.register({

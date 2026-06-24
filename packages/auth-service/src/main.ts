@@ -28,7 +28,7 @@ async function bootstrap() {
     .addBearerAuth() // Habilita el botón para inyectar el JWT en Swagger
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  SwaggerModule.setup('api/v1/auth/docs', app, document);
   // --------------------------------
 
   const port = configService.get<number>('PORT') || 3000;
@@ -36,7 +36,7 @@ async function bootstrap() {
 
   await app.listen(port);
   console.log(`[${new Date().toISOString()}] Auth Service running on port ${port}`);
-  console.log(`📄 Swagger Docs en: http://localhost:${port}/api/docs`);
+  console.log(`📄 Swagger Docs en: http://localhost:${port}/api/v1/auth/docs`);
 }
 
 bootstrap();

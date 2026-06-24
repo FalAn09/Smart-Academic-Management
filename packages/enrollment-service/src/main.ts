@@ -27,8 +27,13 @@ async function bootstrap() {
     .setVersion('1.0')
     .addBearerAuth()
     .build();
+  
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  
+  // 3. RUTA EN PLURAL PARA EVADIR EL BLOQUEO DEL ALB
+  SwaggerModule.setup('api/v1/enrollments/docs', app, document, {
+      useGlobalPrefix: false, 
+  });
   // --------------------------------
 
   const port = configService.get<number>('PORT') || 3001;
@@ -36,7 +41,7 @@ async function bootstrap() {
 
   await app.listen(port);
   console.log(`[${new Date().toISOString()}] Enrollment Service running on port ${port}`);
-  console.log(`📄 Swagger Docs en: http://localhost:${port}/api/docs`);
+  console.log(`📄 Swagger Docs en: http://localhost:${port}/api/v1/enrollments/docs`);
 }
 
 bootstrap();

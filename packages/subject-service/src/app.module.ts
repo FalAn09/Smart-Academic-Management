@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CacheModule } from '@nestjs/cache-manager';
-import * as redisStore from 'cache-manager-redis-store';
+import { CacheModule } from '@nestjs/cache-manager'; // Mantén el import
+// Borra la línea de import * as redisStore...
 import { SubjectModule } from './subject/subject.module';
 import { SubjectEntity } from './subject/entities/subject.entity';
 import { ProgramEntity } from './subject/entities/program.entity';
@@ -21,13 +21,11 @@ import { ProgramEntity } from './subject/entities/program.entity';
       password: process.env.DB_PASSWORD || 'postgres',
       database: process.env.DB_DATABASE || 'subject_db',
       entities: [SubjectEntity, ProgramEntity],
-      synchronize: process.env.NODE_ENV !== 'production',
+      synchronize: true, // Ya está en true, ¡perfecto!
       logging: process.env.NODE_ENV !== 'production',
     }),
+    // Configuración limpia sin Redis:
     CacheModule.register({
-      store: redisStore,
-      host: process.env.REDIS_HOST || 'localhost',
-      port: parseInt(process.env.REDIS_PORT) || 6379,
       ttl: 3600,
       isGlobal: true,
     }),

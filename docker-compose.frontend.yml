@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./fronted
+    container_name: smart-academic-frontend
+    ports:
+      - "8081:80"
+    networks:
+      - smart-campus
+
+networks:
+  smart-campus:
+    external: true
+    name: smart-academic-management_smart-campus

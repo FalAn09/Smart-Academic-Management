@@ -48,3 +48,14 @@ Thumbs.db
 .nx/polygraph
 .nx/self-healing
 test-output
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl
