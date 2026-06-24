@@ -1,4 +1,4 @@
-name: CD - Build and Push
+name: CD - Build and Deploy to aws
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-and-push:
-    name: Build Images and Push
+    name: Build Images and Deploy to aws
     runs-on: ubuntu-latest
     env:
       NX_NO_CLOUD: true
