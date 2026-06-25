@@ -121,7 +121,7 @@ importers:
         specifier: 22.7.5
         version: 22.7.5(@babel/traverse@7.29.7)(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.18))(@swc/types@0.1.26)(typescript@5.9.3))(@swc/core@1.15.8(@swc/helpers@0.5.18))(@types/node@20.19.9)(@zkochan/js-yaml@0.0.7)(babel-plugin-macros@3.1.0)(eslint@9.39.4(jiti@2.7.0))(nx@22.7.5(@swc-node/register@1.11.1(@swc/core@1.15.8(@swc/helpers@0.5.18))(@swc/types@0.1.26)(typescript@5.9.3))(@swc/core@1.15.8(@swc/helpers@0.5.18)))(ts-node@10.9.1(@swc/core@1.15.8(@swc/helpers@0.5.18))(@types/node@20.19.9)(typescript@5.9.3))(typescript@5.9.3)
       '@nx/web':
-        specifier: 22.7.5
+        specifier: ^22.7.5
         version: 22.7.5(ea2f64af4cd8c235b684f3f50313f68f)
       '@nx/webpack':
         specifier: 22.7.5
@@ -177,6 +177,9 @@ importers:
       prettier:
         specifier: ^3.8.1
         version: 3.8.3
+      swc-loader:
+        specifier: 0.1.15
+        version: 0.1.15(@swc/core@1.15.8(@swc/helpers@0.5.18))(webpack@5.107.2)
       ts-jest:
         specifier: ^29.4.0
         version: 29.4.11(@babel/core@7.29.7)(@jest/transform@30.4.1)(@jest/types@30.4.1)(babel-jest@30.4.1(@babel/core@7.29.7))(jest-util@30.3.0)(jest@30.3.0(@types/node@20.19.9)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.15.8(@swc/helpers@0.5.18))(@types/node@20.19.9)(typescript@5.9.3)))(typescript@5.9.3)
@@ -298,6 +301,8 @@ importers:
       '@nestjs/testing':
         specifier: ^11.0.0
         version: 11.1.24(@nestjs/common@11.1.24(class-transformer@0.5.1)(class-validator@0.15.1)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/core@11.1.24)(@nestjs/platform-express@11.1.24)
+
+  packages/frontend: {}
 
   packages/program-service:
     dependencies:
@@ -5755,6 +5760,12 @@ packages:
     engines: {node: '>= v0.10.32'}
     peerDependencies:
       express: '>=4.0.0 || >=5.0.0-beta'
+
+  swc-loader@0.1.15:
+    resolution: {integrity: sha512-cn1WPIeQJvXM4bbo3OwdEIapsQ4uUGOfyFj0h2+2+brT0k76DCGnZXDE2KmcqTd2JSQ+b61z2NPMib7eEwMYYw==}
+    peerDependencies:
+      '@swc/core': ^1.2.52
+      webpack: '>=2'
 
   sync-child-process@1.0.2:
     resolution: {integrity: sha512-8lD+t2KrrScJ/7KXCSyfhT3/hRq78rC0wBFqNJXv3mZyn6hW2ypM05JmlSvtqRbeq6jqA94oHbxAr2vYsJ8vDA==}
@@ -11215,7 +11226,7 @@ snapshots:
   jest-util@30.4.1:
     dependencies:
       '@jest/types': 30.4.1
-      '@types/node': 25.9.1
+      '@types/node': 20.19.9
       chalk: 4.1.2
       ci-info: 4.4.0
       graceful-fs: 4.2.11
@@ -12846,6 +12857,12 @@ snapshots:
     dependencies:
       express: 5.2.1
       swagger-ui-dist: 5.32.6
+
+  swc-loader@0.1.15(@swc/core@1.15.8(@swc/helpers@0.5.18))(webpack@5.107.2):
+    dependencies:
+      '@swc/core': 1.15.8(@swc/helpers@0.5.18)
+      loader-utils: 2.0.4
+      webpack: 5.107.2(@swc/core@1.15.8(@swc/helpers@0.5.18))(postcss@8.5.15)(webpack-cli@5.1.4)
 
   sync-child-process@1.0.2:
     dependencies:

@@ -1,0 +1,33 @@
+{
+  "name": "@org/frontend",
+  "version": "0.0.1",
+  "private": true,
+  "nx": {
+    "targets": {
+      "build": {
+        "executor": "nx:run-commands",
+        "outputs": [
+         "{workspaceRoot}/dist/packages/frontend"
+          ],
+        "options": {
+          "commands": [
+            "powershell -Command \"New-Item -ItemType Directory -Force -Path dist/packages/frontend\"",
+            "powershell -Command \"Copy-Item -Path packages/frontend/src/* -Destination dist/packages/frontend/ -Recurse -Force\"",
+            "powershell -Command \"if (Test-Path packages/frontend/Dockerfile) { Copy-Item -Path packages/frontend/Dockerfile -Destination dist/packages/frontend/ -Force }\"",
+            "powershell -Command \"if (Test-Path packages/frontend/nginx.conf) { Copy-Item -Path packages/frontend/nginx.conf -Destination dist/packages/frontend/ -Force }\""
+          ],
+          "parallel": false
+        }
+      },
+      "serve": {
+        "executor": "@nx/web:file-server",
+        "options": {
+          "buildTarget": "@org/frontend:build",
+          "staticFilePath": "packages/frontend/src",
+          "port": 4200,
+          "spa": true
+        }
+      }
+    }
+  }
+}
