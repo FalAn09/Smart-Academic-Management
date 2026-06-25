@@ -19,6 +19,7 @@
       "path": "./packages/program-service"
     },
     {
+<<<<<<< HEAD
       "path": "./packages/classroom-service"
     },
     {
@@ -26,6 +27,9 @@
     },
     {
       "path": "./packages/health-monitor"
+=======
+      "path": "./packages/frontend"
+>>>>>>> 39676c3 (feat(frontend): unify static frontend into Nx monorepo and configure deployment)
     }
   ]
 }
