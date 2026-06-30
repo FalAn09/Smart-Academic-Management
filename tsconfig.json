@@ -17,6 +17,12 @@
     },
     {
       "path": "./packages/program-service"
+    },
+    {
+      "path": "./packages/notification-service-e2e"
+    },
+    {
+      "path": "./packages/notification-service"
     }
   ]
 }

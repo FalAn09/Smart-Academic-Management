@@ -6,6 +6,7 @@ import * as redisStore from 'cache-manager-redis-store';
 import { EnrollmentModule } from './enrollment/enrollment.module';
 import { EnrollmentEntity } from './enrollment/entities/enrollment.entity';
 import { StudentEntity } from './enrollment/entities/student.entity';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 
 @Module({
   imports: [
