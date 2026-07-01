@@ -17,6 +17,15 @@
     },
     {
       "path": "./packages/program-service"
+    },
+    {
+      "path": "./packages/classroom-service"
+    },
+    {
+      "path": "./packages/health-monitor-e2e"
+    },
+    {
+      "path": "./packages/health-monitor"
     }
   ]
 }

@@ -24,7 +24,7 @@ async function bootstrap() {
   // --- CONFIGURACIÓN DE SWAGGER ---
   const config = new DocumentBuilder()
     .setTitle('SMART CAMPUS UCE - Subject Service')
-    .setDescription('API para la gestión de asignaturas y materias.')
+    .setDescription('API for managing subjects and courses.')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
@@ -45,7 +45,7 @@ async function bootstrap() {
     `[${new Date().toISOString()}] Subject Service running on port ${port}`,
   );
   console.log(
-    `📄 Swagger Docs en: http://localhost:${port}/api/v1/subjects/docs`,
+    `📄 Swagger Docs in: http://localhost:${port}/api/v1/subjects/docs`,
   );
 }
 

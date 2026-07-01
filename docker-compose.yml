@@ -1,6 +1,8 @@
-version: '3.8'
-
 services:
+  # =========================
+  # DATABASES
+  # =========================
+
   # PostgreSQL Database for Auth Service
   postgres-auth:
     image: postgres:15-alpine
@@ -61,6 +63,7 @@ services:
       timeout: 5s
       retries: 5
 
+  # PostgreSQL Database for Program Service
   postgres-program:
     image: postgres:15-alpine
     container_name: postgres-program
@@ -69,7 +72,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: program_db
     ports:
-      - '5435:5432' # Un puerto local libre
+      - '5435:5432'
     volumes:
       - postgres-program-data:/var/lib/postgresql/data
     networks:
@@ -79,6 +82,30 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  # 👇 NUEVO: PostgreSQL Database for Classroom Service
+  postgres-classroom:
+    image: postgres:15-alpine
+    container_name: postgres-classroom
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: classroom_db
+    ports:
+      - '5436:5432' # Puerto libre para no chocar con las otras DBs
+    volumes:
+      - postgres-classroom-data:/var/lib/postgresql/data
+    networks:
+      - smart-campus
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # =========================
+  # CACHE & MESSAGING
+  # =========================
 
   # Redis Cache
   redis:
@@ -97,6 +124,38 @@ services:
       timeout: 5s
       retries: 5
 
+  # 👇 NUEVO: Zookeeper para Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      KAFKA_HEAP_OPTS: "-Xmx256M -Xms256M" # Límite de RAM
+    networks:
+      - smart-campus
+
+  # 👇 NUEVO: Apache Kafka
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka-broker
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:29092,EXTERNAL://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka-broker:29092,EXTERNAL://127.0.0.1:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_HEAP_OPTS: "-Xmx256M -Xms256M" # Límite de RAM
+    networks:
+      - smart-campus
+
   # =========================
   # MICROSERVICES (DOCKER HUB)
   # =========================
@@ -112,7 +171,6 @@ services:
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
       DB_DATABASE: auth_db
-      # Se eliminó el símbolo $ y se agregaron comillas dobles
       JWT_SECRET: 'your_jwt_secret_key_change_in_production_SuP3rS3cr3tK3y'
       REFRESH_TOKEN_SECRET: 'your_refresh_token_secret_SuP3rR3fr3shS3cr3t'
       REFRESH_TOKEN_EXPIRATION: 30d
@@ -217,6 +275,36 @@ services:
     networks:
       - smart-campus
 
+  classroom-service:
+    image: dapaeza/classroom-service:latest
+    container_name: classroom-service
+    environment:
+      NODE_ENV: production
+      PORT: 3004
+      DB_HOST: postgres-classroom
+      DB_PORT: 5432 # Puerto interno de la BD en la red de Docker
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_DATABASE: classroom_db
+    ports:
+      - '3004:3004'
+    depends_on:
+      postgres-classroom:
+        condition: service_healthy
+    networks:
+      - smart-campus
+
+  health-monitor:
+    image: dapaeza/health-monitor:latest
+    container_name: health-monitor
+    environment:
+      NODE_ENV: production
+      PORT: 3010
+    ports:
+      - '3010:3010'
+    networks:
+      - smart-campus
+
 networks:
   smart-campus:
     driver: bridge
@@ -227,3 +315,4 @@ volumes:
   postgres-subject-data:
   postgres-program-data:
   redis-data:
+  postgres-classroom-data: 

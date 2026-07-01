@@ -17,6 +17,8 @@ async function bootstrap() {
     process.env.SUBJECT_SERVICE_URL || 'http://subject-service:3002';
   const programUrl =
     process.env.PROGRAM_SERVICE_URL || 'http://program-service:3003';
+  const classroomUrl =
+    process.env.CLASSROOM_SERVICE_URL || 'http://classroom-service:3004';
 
   // 2. Middlewares de Proxy
   app.use(
@@ -51,10 +53,26 @@ async function bootstrap() {
     }),
   );
 
-  // 3. BLOQUE NUEVO: Swagger Centralizado
+  app.use(
+    '/api/v1/classrooms',
+    createProxyMiddleware({
+      target: classroomUrl,
+      changeOrigin: true,
+    }),
+  );
+
+  app.use(
+    '/api/v1/monitor',
+    createProxyMiddleware({
+      target: process.env.HEALTH_MONITOR_URL || 'http://health-monitor:3010',
+      changeOrigin: true,
+    }),
+  );
+
+  // 3. Swagger Centralizado
   const config = new DocumentBuilder()
     .setTitle('SMART CAMPUS UCE - API Gateway')
-    .setDescription('Documentación unificada de los microservicios académicos')
+    .setDescription('Unified documentation of academic microservices')
     .setVersion('1.0')
     .build();
 
@@ -64,22 +82,32 @@ async function bootstrap() {
     explorer: true,
     swaggerOptions: {
       urls: [
-        // Consumimos el JSON de documentación a través de los túneles proxy que ya definiste arriba
         { url: '/api/v1/auth/docs-json', name: '🔐 Auth Service' },
         { url: '/api/v1/enrollments/docs-json', name: '📝 Enrollment Service' },
         { url: '/api/v1/subjects/docs-json', name: '📚 Subject Service' },
         { url: '/api/v1/programs/docs-json', name: '🎓 Program Service' },
+        { url: '/api/v1/classrooms/docs-json', name: '🏢 Classroom Service' },
       ],
     },
   });
 
+  // =========================================================
+  // 4. ENDPOINT DE SALUD DIRECTO PARA EL ALB DE AWS
+  // =========================================================
+  app.getHttpAdapter().get('/health', (req, res) => {
+    res.status(200).json({
+      status: 'ok',
+      service: 'api-gateway',
+      timestamp: new Date().toISOString(),
+    });
+  });
+  // =========================================================
+
   const port = process.env.PORT || 8080;
   await app.listen(port);
+  console.log(`🚀 API Gateway running and routing traffic on port ${port}`);
   console.log(
-    `🚀 API Gateway corriendo y enrutando tráfico en el puerto ${port}`,
-  );
-  console.log(
-    `📚 Documentación centralizada en: http://localhost:${port}/api/docs`,
+    `📚 Centralized documentation in: http://localhost:${port}/api/docs`,
   );
 }
 bootstrap();

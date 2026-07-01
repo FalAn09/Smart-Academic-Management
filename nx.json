@@ -62,7 +62,9 @@
         "packages/enrollment-service-e2e/**/*",
         "packages/subject-service-e2e/**/*",
         "packages/api-gateway-e2e/**/*",
-        "packages/program-service-e2e/**/*"
+        "packages/program-service-e2e/**/*",
+        "packages/classroom-service-e2e/**/*",
+        "packages/health-monitor-e2e/**/*"
       ]
     }
   ],

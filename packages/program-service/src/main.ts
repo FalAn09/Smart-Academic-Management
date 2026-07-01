@@ -14,7 +14,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('SMART CAMPUS UCE - Program Service')
     .setDescription(
-      'API para la gestión de programas y carreras académicas de la universidad.',
+      'API for managing academic programs and careers at the university.',
     )
     .setVersion('1.0')
     .build();
@@ -25,6 +25,6 @@ async function bootstrap() {
   // Levantamos el servicio en el puerto 3003
   const port = process.env.PORT || 3003;
   await app.listen(port);
-  console.log(`🎓 Program Service corriendo en el puerto ${port}`);
+  console.log(`🎓 Program Service running on port ${port}`);
 }
 bootstrap();
