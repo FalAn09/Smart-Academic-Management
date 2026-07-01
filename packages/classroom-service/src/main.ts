@@ -14,7 +14,7 @@ async function bootstrap() {
   // =========================================================
   const config = new DocumentBuilder()
     .setTitle('Classroom Service')
-    .setDescription('API para la gestión de infraestructura física y aulas del campus')
+    .setDescription('API for managing physical infrastructure and classrooms on campus')
     .setVersion('1.0')
     .addBearerAuth() // Mantiene el estándar de JWT de tu Auth Service
     .build();
