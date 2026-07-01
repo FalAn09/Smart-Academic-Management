@@ -17,6 +17,8 @@ async function bootstrap() {
     process.env.SUBJECT_SERVICE_URL || 'http://subject-service:3002';
   const programUrl =
     process.env.PROGRAM_SERVICE_URL || 'http://program-service:3003';
+  const classroomUrl = // 👈 NUEVA VARIABLE
+    process.env.CLASSROOM_SERVICE_URL || 'http://classroom-service:3004';
 
   // 2. Middlewares de Proxy
   app.use(
@@ -51,7 +53,16 @@ async function bootstrap() {
     }),
   );
 
-  // 3. BLOQUE NUEVO: Swagger Centralizado
+  // 👇 NUEVO: Proxy para el enrutamiento de Aulas
+  app.use(
+    '/api/v1/classrooms',
+    createProxyMiddleware({
+      target: classroomUrl,
+      changeOrigin: true,
+    }),
+  );
+
+  // 3. Swagger Centralizado
   const config = new DocumentBuilder()
     .setTitle('SMART CAMPUS UCE - API Gateway')
     .setDescription('Documentación unificada de los microservicios académicos')
@@ -64,11 +75,11 @@ async function bootstrap() {
     explorer: true,
     swaggerOptions: {
       urls: [
-        // Consumimos el JSON de documentación a través de los túneles proxy que ya definiste arriba
         { url: '/api/v1/auth/docs-json', name: '🔐 Auth Service' },
         { url: '/api/v1/enrollments/docs-json', name: '📝 Enrollment Service' },
         { url: '/api/v1/subjects/docs-json', name: '📚 Subject Service' },
         { url: '/api/v1/programs/docs-json', name: '🎓 Program Service' },
+        { url: '/api/v1/classrooms/docs-json', name: '🏢 Classroom Service' }, // 👈 NUEVO: Agregado al menú
       ],
     },
   });

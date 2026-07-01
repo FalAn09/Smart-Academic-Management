@@ -17,6 +17,9 @@
     },
     {
       "path": "./packages/program-service"
+    },
+    {
+      "path": "./packages/classroom-service"
     }
   ]
 }
