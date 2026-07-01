@@ -23,7 +23,7 @@ async function bootstrap() {
   // --- CONFIGURACIÓN DE SWAGGER ---
   const config = new DocumentBuilder()
     .setTitle('SMART CAMPUS UCE - Enrollment Service')
-    .setDescription('API para el registro y gestión de matrículas de estudiantes.')
+    .setDescription('API for student registration and enrollment management.')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
@@ -41,7 +41,7 @@ async function bootstrap() {
 
   await app.listen(port);
   console.log(`[${new Date().toISOString()}] Enrollment Service running on port ${port}`);
-  console.log(`📄 Swagger Docs en: http://localhost:${port}/api/v1/enrollments/docs`);
+  console.log(`📄 Swagger Docs in: http://localhost:${port}/api/v1/enrollments/docs`);
 }
 
 bootstrap();

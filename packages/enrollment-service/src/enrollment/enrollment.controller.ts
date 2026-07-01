@@ -15,7 +15,7 @@ import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
 import { UpdateEnrollmentDto } from './dto/update-enrollment.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
-@ApiTags('Gestión de Matrículas (Enrollments)')
+@ApiTags('Enrollments management (Enrollments)')
 @Controller('api/v1/enrollments/data')
 export class EnrollmentController {
   constructor(
@@ -24,14 +24,14 @@ export class EnrollmentController {
   ) {}
 
   @ApiOperation({
-    summary: 'Verificar salud del microservicio (Target Group AWS)',
+    summary: 'Verify the health of the microservice (Target Group AWS)',
   })
   @Get('health')
   healthCheck() {
     return { status: 'ok', timestamp: new Date().toISOString() };
   }
 
-  @ApiOperation({ summary: 'Crear un nuevo registro de matrícula' })
+  @ApiOperation({ summary: 'Create a new enrollment record' })
   @Post()
   async createEnrollment(@Body() createEnrollmentDto: CreateEnrollmentDto) {
     const enrollment = await this.enrollmentService.create(createEnrollmentDto);
@@ -44,7 +44,7 @@ export class EnrollmentController {
   }
 
   @ApiOperation({
-    summary: 'Obtener el listado completo de matrículas (Utiliza Caché Redis)',
+    summary: 'Get the list of all enrollments (Uses Redis Cache)',
   })
   @Get()
   async getAllEnrollments() {
@@ -67,7 +67,7 @@ export class EnrollmentController {
   }
 
   @ApiOperation({
-    summary: 'Obtener todas las matrículas de un estudiante específico',
+    summary: 'Get all enrollments for a specific student',
   })
   @Get('student/:studentId')
   async getStudentEnrollments(@Param('studentId') studentId: string) {
@@ -79,7 +79,7 @@ export class EnrollmentController {
     };
   }
 
-  @ApiOperation({ summary: 'Obtener los detalles de una matrícula por su ID' })
+  @ApiOperation({ summary: 'Get details of a specific enrollment' })
   @Get(':id')
   async getEnrollmentById(@Param('id') id: string) {
     const enrollment = await this.enrollmentService.findById(id);
@@ -91,7 +91,7 @@ export class EnrollmentController {
   }
 
   @ApiOperation({
-    summary: 'Actualizar el estado o datos de una matrícula existente',
+    summary: 'Update information of a specific enrollment',
   })
   @Put(':id')
   async updateEnrollment(
@@ -110,7 +110,7 @@ export class EnrollmentController {
     };
   }
 
-  @ApiOperation({ summary: 'Eliminar un registro de matrícula' })
+  @ApiOperation({ summary: 'Delete a specific enrollment record' })
   @Delete(':id')
   async deleteEnrollment(@Param('id') id: string) {
     await this.enrollmentService.delete(id);
@@ -122,7 +122,7 @@ export class EnrollmentController {
   }
 
   @ApiOperation({
-    summary: 'Validar disponibilidad de cupos para una asignatura',
+    summary: 'Validate availability of spots for a specific subject',
   })
   @Post('validate-quota')
   async validateQuota(

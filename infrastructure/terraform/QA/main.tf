@@ -1,6 +1,6 @@
 terraform {
   backend "s3" {
-    bucket         = "smart-campus-uce-tfstate-dapaeza"
+    bucket         = "smart-campus-uce-tfstate-dapaeza-qa"
     key            = "qa/terraform.tfstate"
     region         = "us-east-1"
     encrypt        = true

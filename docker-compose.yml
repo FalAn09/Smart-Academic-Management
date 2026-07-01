@@ -294,6 +294,17 @@ services:
     networks:
       - smart-campus
 
+  health-monitor:
+    image: dapaeza/health-monitor:latest
+    container_name: health-monitor
+    environment:
+      NODE_ENV: production
+      PORT: 3010
+    ports:
+      - '3010:3010'
+    networks:
+      - smart-campus
+
 networks:
   smart-campus:
     driver: bridge

@@ -15,7 +15,7 @@ import { CreateProgramDto } from './dto/create-program.dto';
 import { UpdateProgramDto } from './dto/update-program.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
-@ApiTags('Programas Académicos (Programs)')
+@ApiTags('Academic Programs (Programs)')
 @Controller('api/v1/programs/data')
 export class ProgramController {
   constructor(
@@ -24,7 +24,7 @@ export class ProgramController {
   ) {}
 
   @ApiOperation({
-    summary: 'Verificar salud del microservicio (Target Group AWS)',
+    summary: 'Verify the health of the microservice (Target Group AWS)',
   })
   @Get('health')
   healthCheck() {
@@ -35,7 +35,7 @@ export class ProgramController {
     };
   }
 
-  @ApiOperation({ summary: 'Crear un nuevo programa académico' })
+  @ApiOperation({ summary: 'Create a new academic program' })
   @Post()
   async createProgram(@Body() createProgramDto: CreateProgramDto) {
     const program = await this.programService.create(createProgramDto);
@@ -48,7 +48,7 @@ export class ProgramController {
   }
 
   @ApiOperation({
-    summary: 'Obtener el listado completo de programas (Utiliza Caché Redis)',
+    summary: 'Get the list of all academic programs (Uses Redis Cache)',
   })
   @Get()
   async getAllPrograms() {
@@ -70,7 +70,7 @@ export class ProgramController {
     };
   }
 
-  @ApiOperation({ summary: 'Obtener los detalles de un programa por su ID' })
+  @ApiOperation({ summary: 'Get details of a specific academic program' })
   @Get('detail/:id')
   async getProgramById(@Param('id', ParseUUIDPipe) id: string) {
     const program = await this.programService.findById(id);
@@ -82,7 +82,7 @@ export class ProgramController {
   }
 
   @ApiOperation({
-    summary: 'Actualizar la información de un programa existente',
+    summary: 'Update information of a specific academic program',
   })
   @Put('detail/:id')
   async updateProgram(
@@ -98,7 +98,7 @@ export class ProgramController {
     };
   }
 
-  @ApiOperation({ summary: 'Eliminar (o desactivar) un programa académico' })
+  @ApiOperation({ summary: 'Delete a specific academic program' })
   @Delete('detail/:id')
   async deleteProgram(@Param('id', ParseUUIDPipe) id: string) {
     await this.programService.delete(id);

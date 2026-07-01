@@ -13,7 +13,7 @@ import { CreateClassroomDto } from './dto/create-classroom.dto';
 import { UpdateClassroomDto } from './dto/update-classroom.dto';
 
 // 1. Normalizamos el título de la sección en Swagger
-@ApiTags('Gestión de Aulas (Classrooms)') 
+@ApiTags('Classrooms management (Classrooms)') 
 // 2. Agregamos el sub-path "/data" al controlador
 @Controller('classrooms/data') 
 export class ClassroomController {
@@ -23,7 +23,7 @@ export class ClassroomController {
   // ENDPOINT DE SALUD (AWS TARGET GROUP)
   // =======================================================
   @Get('health')
-  @ApiOperation({ summary: 'Verificar salud del microservicio (Target Group AWS)' })
+  @ApiOperation({ summary: 'Verify the health of the microservice (Target Group AWS)' })
   checkHealth() {
     return { 
       status: 'ok', 
@@ -36,31 +36,31 @@ export class ClassroomController {
   // OPERACIONES CRUD
   // =======================================================
   @Post()
-  @ApiOperation({ summary: 'Crear un nuevo registro de aula' })
+  @ApiOperation({ summary: 'Create a new classroom record' })
   create(@Body() createClassroomDto: CreateClassroomDto) {
     return this.classroomService.create(createClassroomDto);
   }
 
   @Get()
-  @ApiOperation({ summary: 'Obtener la lista de todas las aulas' })
+  @ApiOperation({ summary: 'Get the list of all classrooms' })
   findAll() {
     return this.classroomService.findAll();
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Obtener los detalles de un aula específica' })
+  @ApiOperation({ summary: 'Get details of a specific classroom' })
   findOne(@Param('id') id: string) {
     return this.classroomService.findOne(id);
   }
 
   @Put(':id')
-  @ApiOperation({ summary: 'Actualizar la información de un registro de aula' })
+  @ApiOperation({ summary: 'Update information of a specific classroom' })
   update(@Param('id') id: string, @Body() updateClassroomDto: UpdateClassroomDto) {
     return this.classroomService.update(id, updateClassroomDto);
   }
 
   @Delete(':id')
-  @ApiOperation({ summary: 'Eliminar un registro de aula' })
+  @ApiOperation({ summary: 'Delete a specific classroom record' })
   remove(@Param('id') id: string) {
     return this.classroomService.remove(id);
   }

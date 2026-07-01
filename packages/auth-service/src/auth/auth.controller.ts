@@ -13,12 +13,22 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 
-@ApiTags('Identidad y Acceso (Auth)')
+@ApiTags('Identity and Access (Auth)')
 @Controller('api/v1/auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @ApiOperation({ summary: 'Registrar un nuevo usuario en el sistema' })
+@Get('health')
+@ApiOperation({ summary: 'Verify the health of the microservice (Target Group AWS)' })
+checkHealth() {
+  return {
+    status: 'ok',
+    service: 'auth-service',
+    timestamp: new Date().toISOString(),
+  };
+}
+
+  @ApiOperation({ summary: 'Register a new user in the system' })
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
     const user = await this.authService.register(registerDto);
@@ -29,7 +39,7 @@ export class AuthController {
     };
   }
 
-  @ApiOperation({ summary: 'Iniciar sesión y obtener tokens de acceso' })
+  @ApiOperation({ summary: 'Login and obtain access tokens' })
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
     const result = await this.authService.login(loginDto);
@@ -41,7 +51,7 @@ export class AuthController {
   }
 
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Obtener el perfil del usuario autenticado' })
+  @ApiOperation({ summary: 'Get the profile of the authenticated user' })
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async getProfile(@Request() req) {
@@ -56,7 +66,7 @@ export class AuthController {
   // NUEVO ENDPOINT INTERNO (Para comunicación con Enrollment)
   // ==========================================================
   @ApiOperation({
-    summary: 'Uso interno: Obtener perfil por ID para otros microservicios',
+    summary: 'Internal use: Get user profile by ID for other microservices',
   })
   @Get('profile/:id')
   async getUserProfileById(@Param('id') id: string) {
@@ -70,7 +80,7 @@ export class AuthController {
   }
 
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Cerrar sesión e invalidar tokens' })
+  @ApiOperation({ summary: 'Logout and invalidate tokens' })
   @UseGuards(JwtAuthGuard)
   @Post('logout')
   async logout(@Request() req) {
@@ -80,7 +90,7 @@ export class AuthController {
     };
   }
 
-  @ApiOperation({ summary: 'Validar si un token JWT sigue siendo válido' })
+  @ApiOperation({ summary: 'Validate if a JWT token is still valid' })
   @Post('validate-token')
   async validateToken(@Body() data: { token: string }) {
     const isValid = await this.authService.validateToken(data.token);
@@ -92,7 +102,7 @@ export class AuthController {
   }
 
   @ApiOperation({
-    summary: 'Refrescar el token de acceso usando el Refresh Token',
+    summary: 'Refresh the access token using the Refresh Token',
   })
   @Post('refresh-token')
   async refreshToken(@Body() data: { refreshToken: string }) {
