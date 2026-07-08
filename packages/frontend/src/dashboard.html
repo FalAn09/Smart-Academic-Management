@@ -17,7 +17,7 @@
           <p class="eyebrow">Dashboard</p>
           <h1>Smart Academic Management</h1>
           <p class="subtitle">
-            Panel básico para auth, subjects y enrollments.
+            Panel básico para auth, subjects, enrollments, programs y classrooms.
           </p>
         </div>
         <div class="header-actions">
@@ -115,10 +115,73 @@
                 placeholder="Créditos"
                 required
               />
-              
               <input name="professor" value="NONE" placeholder="Profesor opcional" />
             </div>
             <button type="submit">Guardar matrícula</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h2>Program Service</h2>
+            <button class="ghost" data-action="health-program">Health</button>
+          </div>
+          <p class="card-copy">Crear programas académicos y revisar su disponibilidad.</p>
+
+          <form id="program-form" class="stack">
+            <h3>Nuevo programa</h3>
+            <div class="form-grid">
+              <input name="code" placeholder="Código" required />
+              <input name="name" placeholder="Nombre" required />
+              <input name="description" value="NONE" placeholder="Descripción" />
+              <input
+                name="totalSemesters"
+                type="number"
+                min="1"
+                placeholder="Semestres totales"
+                required
+              />
+              <input name="degreeTitle" placeholder="Título" required />
+              <select name="isActive">
+                <option value="true">Activo</option>
+                <option value="false">Inactivo</option>
+              </select>
+            </div>
+            <button type="submit">Guardar programa</button>
+          </form>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h2>Classroom Service</h2>
+            <button class="ghost" data-action="health-classroom">Health</button>
+          </div>
+          <p class="card-copy">Crear aulas y validar su disponibilidad.</p>
+
+          <form id="classroom-form" class="stack">
+            <h3>Nueva aula</h3>
+            <div class="form-grid">
+              <input name="code" placeholder="Código" required />
+              <input name="building" placeholder="Edificio/Bloque" required />
+              <input
+                name="capacity"
+                type="number"
+                min="1"
+                placeholder="Capacidad"
+                required
+              />
+              <select name="type">
+                <option value="TEORICA">TEORICA</option>
+                <option value="LABORATORIO">LABORATORIO</option>
+                <option value="VIRTUAL">VIRTUAL</option>
+              </select>
+              <select name="status">
+                <option value="ACTIVE">ACTIVE</option>
+                <option value="MAINTENANCE">MAINTENANCE</option>
+                <option value="INACTIVE">INACTIVE</option>
+              </select>
+            </div>
+            <button type="submit">Guardar aula</button>
           </form>
         </article>
       </section>

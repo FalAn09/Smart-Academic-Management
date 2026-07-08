@@ -3,6 +3,8 @@ const endpoints = {
   auth: '/api/auth',
   subject: '/api/subjects',
   enrollment: '/api/enrollments',
+  program: '/api/programs/data',
+  classroom: '/api/classrooms/data',
 };
 
 // 2. ELEMENTOS DEL DOM
@@ -12,6 +14,8 @@ const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
 const subjectForm = document.getElementById('subject-form');
 const enrollmentForm = document.getElementById('enrollment-form');
+const programForm = document.getElementById('program-form');
+const classroomForm = document.getElementById('classroom-form');
 const logoutButton = document.getElementById('logout-button');
 
 // 3. FUNCIONES UTILITARIAS
@@ -34,8 +38,15 @@ function setResponse(value, isError = false) {
 
 function normalizePayload(form) {
   const payload = Object.fromEntries(new FormData(form).entries());
-  const numericFields = new Set(['credits', 'hours', 'maxCapacity']);
-  
+  const numericFields = new Set([
+    'credits',
+    'hours',
+    'maxCapacity',
+    'totalSemesters',
+    'capacity',
+  ]);
+  const booleanFields = new Set(['isActive']);
+
   for (const [key, value] of Object.entries(payload)) {
     if (value === '') {
       payload[key] = '';
@@ -44,6 +55,11 @@ function normalizePayload(form) {
 
     if (numericFields.has(key)) {
       payload[key] = Number(value);
+      continue;
+    }
+
+    if (booleanFields.has(key)) {
+      payload[key] = value === 'true';
     }
   }
 
@@ -245,6 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Vinculación de formularios académicos
     wireForm(subjectForm, endpoints.subject);
     wireForm(enrollmentForm, endpoints.enrollment);
+    wireForm(programForm, endpoints.program);
+    wireForm(classroomForm, endpoints.classroom);
 
     // Configuración de botones de Health Check y Perfil
     const healthSubjectButton = document.querySelector('[data-action="health-subject"]');
@@ -268,6 +286,31 @@ document.addEventListener('DOMContentLoaded', () => {
       healthEnrollmentButton.addEventListener('click', async () => {
         try {
           const data = await requestJson(`${endpoints.enrollment}/health`);
+          setResponse(data);
+        } catch (error) {
+          setResponse({ error: error.message }, true);
+        }
+      });
+    }
+
+    const healthProgramButton = document.querySelector('[data-action="health-program"]');
+    const healthClassroomButton = document.querySelector('[data-action="health-classroom"]');
+
+    if (healthProgramButton) {
+      healthProgramButton.addEventListener('click', async () => {
+        try {
+          const data = await requestJson(`${endpoints.program}/health`);
+          setResponse(data);
+        } catch (error) {
+          setResponse({ error: error.message }, true);
+        }
+      });
+    }
+
+    if (healthClassroomButton) {
+      healthClassroomButton.addEventListener('click', async () => {
+        try {
+          const data = await requestJson(`${endpoints.classroom}/health`);
           setResponse(data);
         } catch (error) {
           setResponse({ error: error.message }, true);
@@ -349,6 +392,14 @@ document.addEventListener('DOMContentLoaded', () => {
       enrollment: {
         create: endpoints.enrollment,
         health: `${endpoints.enrollment}/health`,
+      },
+      program: {
+        create: endpoints.program,
+        health: `${endpoints.program}/health`,
+      },
+      classroom: {
+        create: endpoints.classroom,
+        health: `${endpoints.classroom}/health`,
       },
     });
   }
